@@ -1,0 +1,1939 @@
+<html data-page-node-id="OlIqHWS3YWFyNSLAIe5p91" lang="zh-CN"><head data-page-node-id="o1SjTDFJRrBqSeYiZPXBXb"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script data-page-node-id="DZGBDVLdSu0HyEg1NOECoE" src="file:///D:/page/page_comm/inject.js"></script><style id="smartpage-overlay-scrollbar">html{color-scheme:light}html::-webkit-scrollbar{width:0!important}body::-webkit-scrollbar{width:0!important}</style><style data-page-node-id="ToqwNTWHevTBKyPnvICQqv" data-pnid-children="ron223nL2ajKSJQX7SilpH" id="smartpage-overlay-scrollbar">html{color-scheme:light}html::-webkit-scrollbar{width:0!important}body::-webkit-scrollbar{width:0!important}</style><style data-page-node-id="oIEf2r9KDsgZJujnSuYPNU" data-pnid-children="ZjvvtX1VtmJCQzr8NnTlF3" id="smartpage-overlay-scrollbar">html{color-scheme:light}html::-webkit-scrollbar{width:0!important}body::-webkit-scrollbar{width:0!important}</style>
+
+<meta data-page-node-id="3arVjKF4jwf8w24HRDCPVl" content="width=device-width, initial-scale=1.0" name="viewport">
+<title data-page-node-id="fqDot1l4pceeN07CnFcyxX" data-pnid-children="0sjaFShnj0OQ68Zi7kx0jJ">主页-原始模板</title>
+<style data-page-node-id="pEeNCRGG7DePtpch8h5Rwp" data-pnid-children="EtF4TyHNn9Cv5NIeDgPj0U">
+  :root{
+    --bg:#ffffff; --text:#0f1419; --muted:#536471; --line:#eff3f4;
+    --btn:#0f1419; --btn-text:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
+    display:flex; justify-content:center; min-height:100vh;
+  }
+  .page{width:100%; max-width:600px; border-left:1px solid var(--line); border-right:1px solid var(--line); background:var(--bg);}
+  /* 顶部栏 */
+  .topbar{
+    display:flex; align-items:center; gap:18px; padding:6px 16px;
+    position:sticky; top:0; background:rgba(255,255,255,.85); backdrop-filter:blur(8px); z-index:10;
+  }
+  .topbar .back{font-size:20px; cursor:pointer; color:var(--text); text-decoration:none;}
+  .topbar .titles .name{font-weight:800; font-size:17px;}
+  .topbar .titles .count{font-size:13px; color:var(--muted);}
+  #tweetCount{font-family:inherit; font-weight:inherit; font-size:12px; color:var(--text);}
+  /* 封面 */
+  .banner{width:100%; height:200px; background:#222; overflow:hidden; display:block; position:relative;}
+  .banner img{width:100%; height:100%; object-fit:cover; display:block; filter:brightness(.75);}
+  /* 头像区 */
+  .profile-head{padding:0 16px; position:relative;}
+  .avatar-row{display:flex; justify-content:space-between; align-items:flex-start;}
+  .avatar{
+    width:133px; height:133px; border-radius:50%; border:4px solid var(--bg);
+    margin-top:-67px; background:#ddd; overflow:hidden; flex-shrink:0;
+    display:block; position:relative;
+  }
+  .avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  /* 非编辑模式：头像/封面不可点选图片 */
+  body:not(.editing) .avatar .px-input,
+  body:not(.editing) .banner .px-input{display:none;}
+  body.editing .avatar, body.editing .banner{cursor:pointer;}
+  body.editing .avatar:hover, body.editing .banner:hover{filter:brightness(1.06);}
+  .follow-wrap{display:flex; align-items:center; gap:12px; padding-top:12px;}
+  .clock{color:var(--muted); font-size:15px;}
+  .follow-btn{
+    background:var(--btn); color:var(--btn-text); border:none; border-radius:9999px;
+    padding:8px 20px; font-size:15px; font-weight:700; cursor:pointer;
+  }
+  .follow-btn.following{background:#fff; color:var(--text); border:1px solid #cfd9de; min-width:96px;}
+  .follow-btn[contenteditable="true"]{cursor:text;}
+  .follow-btn[contenteditable="true"]:focus{outline:2px solid #1d9bf0; outline-offset:2px;}
+  /* 资料文字 */
+  .profile-info{padding:8px 16px 0;}
+  .display-name{font-size:22px; font-weight:800;}
+  .handle{font-size:15px; color:var(--muted); margin-top:2px;}
+  .stats{display:flex; gap:20px; margin-top:12px; font-size:15px; color:var(--muted);}
+  .stats b{color:var(--text);}
+  .bio{margin-top:12px; font-size:16px; line-height:1.45; white-space:pre-wrap;}
+  .info-row{display:flex; align-items:center; gap:1em; margin-top:10px; font-size:15px; color:var(--muted); flex-wrap:wrap;}
+  .info-item{display:inline-flex; align-items:center; gap:8px;}
+  .info-item svg{width:18px; height:18px; fill:currentColor; flex-shrink:0;}
+  /* 分栏 tabs */
+  /* ===== 仿 X：banner+简介区整体平移收合 ===== */
+  /* 【已修复】改用 max-height 收合：不再用 transform + 负 margin，
+     避免 (a) 破坏 sticky 吸顶、(b) 页面高度不足导致滚不动卡死、
+     (c) margin 动画触发重排造成卡顿。 */
+  .collapse-wrap{
+    position:relative;
+    overflow:visible;
+    max-height:2000px;
+    opacity:1;
+    transition:max-height .38s cubic-bezier(.4,0,.2,1), opacity .3s ease;
+    will-change:max-height, opacity;
+  }
+  /* 仅在收合进行中才裁切，保证头像不会露在收合区外 */
+  .collapse-wrap.collapsing{overflow:hidden;}
+  .collapse-wrap.collapsing{
+    max-height:0 !important;
+    opacity:0;
+    pointer-events:none;
+  }
+  .tabs{display:flex; align-items:stretch; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-top:14px; position:sticky; top:52px; background:var(--bg); z-index:9; overflow-x:auto; overflow-y:hidden; white-space:nowrap; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-right:6px;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto; text-align:center; padding:14px 18px; font-size:15px; color:var(--muted);
+    cursor:pointer; position:relative; user-select:none; white-space:nowrap;
+  }
+  .tab.active{color:var(--text); font-weight:700;}
+  .tab.active::after{
+    content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:0;
+    width:56px; height:4px; border-radius:2px; background:#1d9bf0;
+  }
+  /* 推文 */
+  
+  /* ===== 分栏置顶跳转条（新增） ===== */
+  .pin-link{display:flex; align-items:center; gap:10px; padding:14px 16px;
+    border-top:1px solid var(--line); background:var(--bg); cursor:pointer;
+    text-decoration:none; color:inherit; transition:background .18s;}
+  .pin-link:hover{background:rgba(29,155,240,.06);}
+  /* 图钉占位：与推文头像同列(40px)，使文本与作者名"恕火"左对齐 */
+  .pin-icon-wrap{flex-shrink:0; width:42px; display:flex; align-items:center; justify-content:flex-start;}
+  .pin-icon{width:18px; height:18px; fill:var(--muted,#536471);}
+  .pin-text{flex:1; min-width:0; font-size:14px; font-weight:500; color:var(--text,#0f1419);
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .pin-arrow{flex-shrink:0; font-size:14px; color:var(--muted,#536471);}
+  /* 编辑模式下点击不跳转，改为打开编辑弹窗 */
+  body.editing .pin-link{cursor:pointer;}
+  body.editing .pin-link .pin-arrow::after{content:"编辑"; font-size:12px; color:#1d9bf0;}
+  body.editing .pin-link .pin-arrow{font-size:0;}
+.tweet{padding:14px 16px; border-top:1px solid var(--line);}
+  .tweet-head{display:flex; gap:12px; align-items:center; margin-bottom:6px;}
+  .tweet-avatar{width:40px; height:40px; border-radius:50%; overflow:hidden; background:#ddd; flex-shrink:0;}
+  .tweet-avatar img{width:100%; height:100%; object-fit:cover; display:block;}
+  .tweet-head .t-name{font-weight:700; font-size:15px;}
+  .tweet-head .t-handle{color:var(--muted); font-size:15px; margin-left:6px;}
+  .tweet-body{font-size:16px; line-height:1.5; margin:6px 0 10px 52px; white-space:pre-wrap;}
+  /* 九宫格图片 */
+  .photo-grid{
+    display:grid; gap:2px; margin:10px 0 10px 52px;
+    border-radius:16px; overflow:hidden; border:1px solid var(--line);
+  }
+  .photo-grid.grid-1{grid-template-columns:1fr;}
+  .photo-grid.grid-2{grid-template-columns:1fr 1fr;}
+  .photo-grid.grid-3{grid-template-columns:1fr 1fr;}
+  .photo-grid.grid-3 .gcell:nth-child(1){grid-row:span 2;}
+  .photo-grid.grid-4{grid-template-columns:1fr 1fr;}
+  .photo-grid.grid-5{grid-template-columns:1fr 1fr 1fr;}
+  .photo-grid.grid-6{grid-template-columns:1fr 1fr 1fr;}
+  .photo-grid.grid-7{grid-template-columns:1fr 1fr 1fr;}
+  .photo-grid.grid-8{grid-template-columns:1fr 1fr 1fr;}
+  .photo-grid.grid-9{grid-template-columns:1fr 1fr 1fr;}
+  .photo-grid .gcell{aspect-ratio:1/1; overflow:hidden; background:#e1e8ed;}
+  .photo-grid .gcell img{width:100%; height:100%; object-fit:cover; display:block;}
+  /* 单张图片：完整原始比例预览，不裁切、不限高 */
+  .photo-grid.grid-1{border-radius:16px;}
+  .photo-grid.grid-1 .gcell{aspect-ratio:auto;}
+  .photo-grid.grid-1 .gcell img{height:auto; width:100%; object-fit:contain;}
+  .empty{padding:60px 16px; text-align:center; color:var(--muted); font-size:15px;}
+  /* 图片点击看大图：非编辑模式下可点 */
+  body:not(.editing) .photo-grid .gcell{cursor:zoom-in;}
+  /* 大图灯箱 */
+  .lightbox{
+    position:fixed; inset:0; z-index:9999; display:none;
+    background:rgba(0,0,0,.92); align-items:center; justify-content:center;
+    padding:20px; touch-action:none;
+  }
+  .lightbox.show{display:flex;}
+  .lightbox img{
+    max-width:100%; max-height:100%; object-fit:contain;
+    border-radius:6px; box-shadow:0 8px 40px rgba(0,0,0,.6);
+    transform-origin:center center; transition:transform .15s ease-out;
+    user-select:none; -webkit-user-drag:none;
+  }
+  .lightbox .lb-close{
+    position:absolute; top:14px; right:16px; width:40px; height:40px;
+    border-radius:50%; background:rgba(255,255,255,.14); color:#fff;
+    border:none; font-size:24px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .lightbox .lb-close:active{background:rgba(255,255,255,.3);}
+  .lightbox .lb-count{
+    position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
+    color:#fff; font-size:14px; background:rgba(255,255,255,.14);
+    padding:6px 16px; border-radius:9999px; letter-spacing:1px;
+  }
+  .lightbox .lb-nav{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:44px; height:44px; border-radius:50%; border:none;
+    background:rgba(255,255,255,.14); color:#fff; font-size:22px;
+    cursor:pointer; display:none; align-items:center; justify-content:center;
+  }
+  .lightbox.multi .lb-nav{display:flex;}
+  .lightbox .lb-prev{left:12px;}
+  .lightbox .lb-next{right:12px;}
+  .lightbox .lb-nav:active{background:rgba(255,255,255,.3);}
+  .lightbox .lb-tip{
+    position:absolute; top:16px; left:50%; transform:translateX(-50%);
+    color:rgba(255,255,255,.55); font-size:12px; white-space:nowrap;
+  }
+  /* 编辑模式：图片操作提示 */
+  .photo-empty{
+    display:block; margin:10px 0 10px 52px; padding:22px; border:1.5px dashed #1d9bf0; border-radius:16px;
+    text-align:center; color:#1d9bf0; font-size:14px; cursor:pointer; background:rgba(29,155,240,.05);
+  }
+  .photo-empty:hover{background:rgba(29,155,240,.12);}
+  .photo-add{
+    display:inline-block; margin:6px 0 4px 52px; padding:6px 14px;
+    border:1.5px dashed #1d9bf0; border-radius:9999px; color:#1d9bf0;
+    font-size:13px; cursor:pointer; background:rgba(29,155,240,.05);
+  }
+  .photo-add:hover{background:rgba(29,155,240,.12);}
+  /* 隐藏的 file input：不能 display:none（部分移动端会失效），用视觉隐藏 */
+  .px-input{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; opacity:0;
+    pointer-events:none;
+  }
+  label.gcell{cursor:pointer; display:block; position:relative; overflow:hidden;}
+  label.gcell:hover{outline:2px solid #1d9bf0; outline-offset:-2px;}
+  .tweet-meta{margin-left:52px; color:var(--muted); font-size:14px; display:flex; justify-content:space-between; align-items:center;}
+  .views b{color:var(--text);}
+  .actions{margin-left:52px; display:flex; justify-content:flex-start; gap:44px; margin-top:10px; color:var(--muted); font-size:14px;}
+  .action{display:flex; align-items:center; gap:6px; cursor:pointer; user-select:none;}
+  /* 操作项数字与"测试"保持同一行显示 */
+  .action .num{white-space:nowrap;}
+  .action svg{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.8;}
+  .action.liked{color:#f91880;}
+  .action.liked svg{fill:#f91880; stroke:#f91880;}
+  .ref-link{color:var(--muted); font-size:14px; cursor:pointer;}
+  .ref-link b{color:var(--text);}
+  /* 编辑相关 */
+  [contenteditable="true"]{outline:none; border-radius:4px; transition:background .15s;}
+  [contenteditable="true"]:hover{background:rgba(83,100,113,.08);}
+  [contenteditable="true"]:focus{background:rgba(29,155,240,.08); box-shadow:0 0 0 2px rgba(29,155,240,.4);}
+  /* 单行字段：编辑时随输入自适应宽度，不换行 */
+  [contenteditable="true"].auto-width{
+    display:inline-block; min-width:1.5em; white-space:nowrap;
+  }
+  /* 多行字段（简介/文案）：随内容自动增高换行 */
+  [contenteditable="true"].auto-height{
+    display:block; white-space:pre-wrap; word-break:break-word;
+  }
+  .edit-toggle{
+    position:fixed; right:20px; bottom:96px; z-index:99;
+    background:#1d9bf0; color:#fff; border:none; border-radius:9999px;
+    padding:12px 22px; font-size:15px; font-weight:700; cursor:pointer;
+    box-shadow:0 4px 12px rgba(0,0,0,.2);
+  }
+  .edit-toggle.off{background:#536471;}
+  .hint{
+    position:fixed; left:50%; transform:translateX(-50%); bottom:24px; z-index:99;
+    background:rgba(15,20,25,.9); color:#fff; padding:8px 18px; border-radius:8px;
+    font-size:13px; opacity:0; transition:opacity .3s; pointer-events:none;
+  }
+  .hint.show{opacity:1;}
+/* 导出/导入按钮组 */
+.io-bar{
+  position:fixed; right:20px; bottom:160px; z-index:99;
+  display:none; flex-direction:column; gap:10px;
+}
+body.editing .io-bar{display:flex;}
+.io-btn{
+  background:#fff; color:#0f1419; border:1px solid #cfd9de; border-radius:9999px;
+  padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.io-btn:active{background:#eff3f4;}
+/* 唱片播放器 */
+.vinyl{
+  position:fixed; right:20px; bottom:20px; z-index:98;
+  width:64px; height:64px; border-radius:50%; cursor:pointer;
+  background:radial-gradient(circle at center, #333 0 18%, #111 18% 22%, #2a2a2a 22% 60%, #111 60% 100%);
+  box-shadow:0 4px 16px rgba(0,0,0,.35); border:none;
+  display:flex; align-items:center; justify-content:center;
+  transition:transform .2s;
+}
+.vinyl::after{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background:repeating-radial-gradient(circle at center, rgba(255,255,255,.06) 0 1px, transparent 1px 4px);
+  pointer-events:none;
+}
+.vinyl .hole{
+  width:14px; height:14px; border-radius:50%; background:var(--bg);
+  border:2px solid #666; position:relative; z-index:2;
+}
+.vinyl.playing{animation:spin 3s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.vinyl-edit{
+  position:absolute; top:-8px; right:-8px; width:24px; height:24px; border-radius:50%;
+  background:#1d9bf0; color:#fff; border:2px solid var(--bg); font-size:13px;
+  display:none; align-items:center; justify-content:center; z-index:3; cursor:pointer;
+  line-height:1;
+}
+body.editing .vinyl-edit{display:flex;}
+  .banner-edit, .avatar-edit{position:absolute; display:none;}
+  @media (max-width:600px){
+    .avatar{width:100px; height:100px; margin-top:-50px;}
+    .banner{height:150px;}
+  }
+
+  /* ===== 黑夜模式 ===== */
+  body.dark{
+    --bg:#000000; --text:#e7e9ea; --muted:#71767b; --line:#2f3336;
+    --btn:#eff3f4; --btn-text:#0f1419;
+  }
+  body.dark .tweet{border-color:var(--line);}
+  /* ===== 右上角工具区：昼夜 + 天气 ===== */
+  .topbar{position:relative;}
+  .top-tools{position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    display:flex; align-items:center; gap:8px; z-index:20;}
+  .tool-btn{width:26px; height:26px; border:none; background:transparent;
+    color:var(--muted); cursor:pointer; display:flex; align-items:center;
+    justify-content:center; padding:0;}
+  .tool-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8;
+    stroke-linecap:round; stroke-linejoin:round;}
+  .tool-btn:active{opacity:.55;}
+  body.dark .top-tools{color:var(--muted);}
+  /* ===== 解锁小锁 ===== */
+
+  /* ===== 模态弹窗 ===== */
+  .modal-mask{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:200;
+    display:none; align-items:center; justify-content:center; padding:20px;}
+  .modal-mask.show{display:flex;}
+  .modal{background:var(--bg); color:var(--text); border-radius:16px; padding:20px;
+    width:100%; max-width:340px; border:1px solid var(--line);}
+  .modal h3{margin:0 0 12px; font-size:17px;}
+  .modal input, .modal textarea{width:100%; padding:10px 12px; border-radius:10px;
+    border:1px solid var(--line); background:transparent; color:var(--text);
+    font-size:15px; font-family:inherit; margin-bottom:10px; outline:none;}
+  .modal textarea{min-height:90px; resize:vertical;}
+  .modal label{display:block; font-size:12px; color:var(--muted); margin-bottom:4px;}
+  .modal-row{display:flex; gap:8px;}
+  .modal-row>div{flex:1;}
+  .fontsize-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .fs-label{font-size:12px; color:var(--muted); white-space:nowrap;}
+  .fs-val{font-size:12px; color:var(--muted); min-width:38px; text-align:right;}
+  .fontsize-row input[type=range]{flex:1; width:auto; margin:0; padding:0;
+    -webkit-appearance:none; appearance:none; height:4px; border-radius:2px;
+    background:var(--line); outline:none; border:none;}
+  .fontsize-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;
+    width:18px; height:18px; border-radius:50%; background:#1d9bf0; cursor:pointer;}
+  .fontsize-row input[type=range]::-moz-range-thumb{width:18px; height:18px;
+    border-radius:50%; background:#1d9bf0; cursor:pointer; border:none;}
+  .modal-btns{display:flex; gap:8px; margin-top:6px;}
+  .mbtn{flex:1; padding:11px; border-radius:999px; border:none; font-size:15px;
+    cursor:pointer; font-family:inherit;}
+  .mbtn.primary{background:var(--btn); color:var(--btn-text);}
+  .mbtn.ghost{background:transparent; color:var(--text); border:1px solid var(--line);}
+  /* ===== 推文删除键 ===== */
+  .tweet-del{position:absolute; top:8px; right:8px; width:26px; height:26px;
+    border-radius:50%; border:1px solid var(--line); background:var(--bg);
+    color:#f4212e; font-size:14px; cursor:pointer; display:none;
+    align-items:center; justify-content:center; padding:0; z-index:5;}
+  body.editing .tweet{position:relative;}
+  body.editing .tweet-del{display:flex;}
+  /* ===== 分栏编辑控件 ===== */
+  .tab-add{display:none; align-items:center; color:#1d9bf0; cursor:pointer;
+    font-size:20px; font-weight:600; padding:0 14px; user-select:none;
+    flex:0 0 auto; position:sticky; right:0; background:var(--bg);}
+  body.editing .tab-add{display:inline-flex;}
+  .modal select{width:100%; padding:10px 12px; border:1px solid var(--line);
+    border-radius:8px; background:var(--bg); color:var(--text); font-size:14px;
+    margin:4px 0 10px; outline:none; -webkit-appearance:none; appearance:none;}
+  .tab-del{display:none; font-size:10px; color:#f4212e; margin-left:2px;
+    cursor:pointer; vertical-align:super;}
+  body.editing .tab-del{display:inline;}
+  /* ===== 编辑操作菜单【已改造】收进右上角锁图标下 =====
+     原为底部悬浮条，会遮挡推文内容导致部分区域无法点选修改。
+     现改为挂在顶栏锁按钮下的下拉面板：仅编辑模式（已解锁）可见，
+     可通过锁图标收起/展开；未解锁时不渲染、不显示。 */
+  .edit-bar{position:fixed; top:56px; right:10px;
+    flex-direction:column; gap:6px; z-index:90;
+    display:none; min-width:132px; padding:8px;
+    background:var(--bg); border:1px solid var(--line); border-radius:14px;
+    box-shadow:0 6px 24px rgba(0,0,0,.18);
+    transform-origin:top right;
+    animation:ebMenuIn .18s ease;}
+  @keyframes ebMenuIn{from{opacity:0; transform:scale(.92) translateY(-4px);}to{opacity:1; transform:none;}}
+  body.editing .edit-bar.open{display:flex;}
+  .edit-bar .ebtn{width:100%; text-align:left; box-shadow:none; padding:9px 14px;}
+  .ebtn{padding:10px 16px; border-radius:999px; border:1px solid var(--line);
+    background:var(--bg); color:var(--text); font-size:14px; cursor:pointer;
+    font-family:inherit; box-shadow:0 2px 10px rgba(0,0,0,.12); white-space:nowrap;}
+  .ebtn.primary{background:var(--btn); color:var(--btn-text); border-color:var(--btn);}
+</style>
+<script data-page-node-id="DojT2pFbSrkJquwfRBCKzw" data-pnid-children="Ru9mHWQ4mIskLSObuvszu4" data-smartpage-injected="database">;(function(){"use strict";function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=Array(t);r<t;r++)n[r]=e[r];return n}function t(e,t){if(!(e instanceof t))throw TypeError("Cannot call a class as a function")}function r(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function n(e,t,n){return t&&r(e.prototype,t),n&&r(e,n),e}function a(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}var i=function(){"use strict";function e(){var r=this,n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"*";t(this,e),a(this,"targetWindow",void 0),a(this,"targetOrigin",void 0),a(this,"pendingRequests",new Map),a(this,"counter",0),a(this,"RPC_TIMEOUT",3e4),this.targetWindow=window.parent,this.targetOrigin=n,window.addEventListener("message",function(e){var t=e.data;(null==t?void 0:t.type)==="rpc:response"&&r.handleResponse(t)})}return n(e,[{key:"call",value:function(e,t){var r=this,n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:this.RPC_TIMEOUT,i="rpc_".concat(Date.now(),"_").concat(++this.counter),o={id:i,method:e,params:void 0!==t?[t]:[],timestamp:Date.now()};return new Promise(function(t,s){var u=window.setTimeout(function(){r.pendingRequests.delete(i),s(Error("[database-sdk] RPC timeout: ".concat(e)))},n);r.pendingRequests.set(i,{resolve:t,reject:s,timer:u}),r.targetWindow.postMessage(function(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{},n=Object.keys(r);"function"==typeof Object.getOwnPropertySymbols&&(n=n.concat(Object.getOwnPropertySymbols(r).filter(function(e){return Object.getOwnPropertyDescriptor(r,e).enumerable}))),n.forEach(function(t){a(e,t,r[t])})}return e}({type:"rpc:request"},o),r.targetOrigin)})}},{key:"handleResponse",value:function(e){var t=this.pendingRequests.get(e.id);t&&(this.pendingRequests.delete(e.id),clearTimeout(t.timer),e.error?t.reject(Error("[database-sdk] RPC error: ".concat(e.error.message))):t.resolve(e.result))}}]),e}(),o=function(){"use strict";function r(){var n=this;t(this,r),a(this,"bridge",void 0),a(this,"csvUpdatedHandlers",new Set),this.bridge=new i(function(){try{var e=window.location.ancestorOrigins;if(e&&e.length>0){var t=e[0];if("string"==typeof t&&t)return t}}catch(e){}try{if(document.referrer)return new URL(document.referrer).origin}catch(e){}return console.warn("[smartpage-database-sdk] cannot resolve parent origin, falling back to '*'"),"*"}()),window.addEventListener("message",function(t){if(t.source===window.parent){var r=t.data;if((null==r?void 0:r.type)==="SMARTPAGE_CSV_UPDATED"){var a=r.databaseIds;if(Array.isArray(a)&&0!==a.length){var i=a.filter(function(e){return"string"==typeof e});if(0!==i.length){var o={databaseIds:i},s=!0,u=!1,l=void 0;try{for(var d,c,f=(d=n.csvUpdatedHandlers,function(t){if(Array.isArray(t))return e(t)}(d)||function(e){if("undefined"!=typeof Symbol&&null!=e[Symbol.iterator]||null!=e["@@iterator"])return Array.from(e)}(d)||function(t,r){if(t){if("string"==typeof t)return e(t,void 0);var n=Object.prototype.toString.call(t).slice(8,-1);if("Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n)return Array.from(n);if("Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return e(t,void 0)}}(d)||function(){throw TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}())[Symbol.iterator]();!(s=(c=f.next()).done);s=!0){var g=c.value;try{g(o)}catch(e){}}}catch(e){u=!0,l=e}finally{try{s||null==f.return||f.return()}finally{if(u)throw l}}}}}}})}return n(r,[{key:"addRecord",value:function(e){return this.bridge.call("database.addRecord",e)}},{key:"updateRecord",value:function(e){return this.bridge.call("database.updateRecord",e)}},{key:"deleteRecord",value:function(e){return this.bridge.call("database.deleteRecord",e)}},{key:"getSchema",value:function(e){return this.bridge.call("database.getSchema",e)}},{key:"getRecord",value:function(e){return this.bridge.call("database.getRecord",e)}},{key:"query",value:function(e){return this.bridge.call("database.query",e)}},{key:"aggregate",value:function(e){return this.bridge.call("database.aggregate",e)}},{key:"onUpdated",value:function(e){var t=this;return this.csvUpdatedHandlers.add(e),function(){t.csvUpdatedHandlers.delete(e)}}},{key:"uploadImage",value:function(e){return this.bridge.call("database.uploadImage",e)}},{key:"uploadFile",value:function(e){return this.bridge.call("database.uploadFile",e,6e5)}},{key:"getDownloadUrl",value:function(e){return this.bridge.call("database.getDownloadUrl",e)}},{key:"getPreviewUrl",value:function(e){return this.bridge.call("database.getPreviewUrl",e)}},{key:"getUserInfo",value:function(){return this.bridge.call("database.getUserInfo")}}]),r}(),s=window;s.__SMART_PAGE__=s.__SMART_PAGE__||{},s.__SMART_PAGE__.database=new o;})();</script><script data-page-node-id="V0h5spYLmGI89AIwF89viH" data-pnid-children="fTVR1cLzk9Um7HI9f1YaFB" data-smartpage-injected="scroll">;(function(){
+  "use strict";
+  if (window.__SMARTPAGE_BOTTOM_SPACE__) return;
+  window.__SMARTPAGE_BOTTOM_SPACE__ = true;
+
+  var READY = "SMARTPAGE_SPACE_READY";
+  var SET = "SMARTPAGE_SET_BOTTOM_SPACE";
+  var prevPadding = "";
+  var prevTransition = "";
+  var basePadding = "0px";
+  var applied = false;
+
+  function apply(space) {
+    var body = document.body;
+    if (!body) return;
+    if (space > 0) {
+      if (!applied) {
+        // 记录原值：内联值用于还原，计算值作叠加基线
+        prevPadding = body.style.paddingBottom;
+        prevTransition = body.style.transition;
+        try {
+          var cs = window.getComputedStyle(body).paddingBottom;
+          if (cs) basePadding = cs;
+        } catch (_) {}
+        applied = true;
+      }
+      body.style.transition = "padding-bottom 0.2s ease";
+      body.style.paddingBottom = "calc(" + basePadding + " + " + space + "px)";
+    } else if (applied) {
+      body.style.paddingBottom = prevPadding;
+      body.style.transition = prevTransition;
+      applied = false;
+    }
+  }
+
+  function onMsg(e) {
+    if (e.source !== window.parent) return;
+    var d = e.data;
+    if (!d || d.type !== SET) return;
+    var space = typeof d.space === "number" && d.space > 0 ? d.space : 0;
+    apply(space);
+  }
+  window.addEventListener("message", onMsg);
+
+  function notifyReady() {
+    if (window.parent && window.parent !== window) {
+      try { window.parent.postMessage({ type: READY }, "*"); } catch (_) {}
+    }
+  }
+  notifyReady();
+  if (document.readyState !== "complete") {
+    window.addEventListener("load", notifyReady, { once: true });
+  }
+})();
+</script><script data-smartpage-injected="database">;(function(){"use strict";function e(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=Array(t);r<t;r++)n[r]=e[r];return n}function t(e,t){if(!(e instanceof t))throw TypeError("Cannot call a class as a function")}function r(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}function n(e,t,n){return t&&r(e.prototype,t),n&&r(e,n),e}function a(e,t,r){return t in e?Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}):e[t]=r,e}var i=function(){"use strict";function e(){var r=this,n=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"*";t(this,e),a(this,"targetWindow",void 0),a(this,"targetOrigin",void 0),a(this,"pendingRequests",new Map),a(this,"counter",0),a(this,"RPC_TIMEOUT",3e4),this.targetWindow=window.parent,this.targetOrigin=n,window.addEventListener("message",function(e){var t=e.data;(null==t?void 0:t.type)==="rpc:response"&&r.handleResponse(t)})}return n(e,[{key:"call",value:function(e,t){var r=this,n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:this.RPC_TIMEOUT,i="rpc_".concat(Date.now(),"_").concat(++this.counter),o={id:i,method:e,params:void 0!==t?[t]:[],timestamp:Date.now()};return new Promise(function(t,s){var u=window.setTimeout(function(){r.pendingRequests.delete(i),s(Error("[database-sdk] RPC timeout: ".concat(e)))},n);r.pendingRequests.set(i,{resolve:t,reject:s,timer:u}),r.targetWindow.postMessage(function(e){for(var t=1;t<arguments.length;t++){var r=null!=arguments[t]?arguments[t]:{},n=Object.keys(r);"function"==typeof Object.getOwnPropertySymbols&&(n=n.concat(Object.getOwnPropertySymbols(r).filter(function(e){return Object.getOwnPropertyDescriptor(r,e).enumerable}))),n.forEach(function(t){a(e,t,r[t])})}return e}({type:"rpc:request"},o),r.targetOrigin)})}},{key:"handleResponse",value:function(e){var t=this.pendingRequests.get(e.id);t&&(this.pendingRequests.delete(e.id),clearTimeout(t.timer),e.error?t.reject(Error("[database-sdk] RPC error: ".concat(e.error.message))):t.resolve(e.result))}}]),e}(),o=function(){"use strict";function r(){var n=this;t(this,r),a(this,"bridge",void 0),a(this,"csvUpdatedHandlers",new Set),this.bridge=new i(function(){try{var e=window.location.ancestorOrigins;if(e&&e.length>0){var t=e[0];if("string"==typeof t&&t)return t}}catch(e){}try{if(document.referrer)return new URL(document.referrer).origin}catch(e){}return console.warn("[smartpage-database-sdk] cannot resolve parent origin, falling back to '*'"),"*"}()),window.addEventListener("message",function(t){if(t.source===window.parent){var r=t.data;if((null==r?void 0:r.type)==="SMARTPAGE_CSV_UPDATED"){var a=r.databaseIds;if(Array.isArray(a)&&0!==a.length){var i=a.filter(function(e){return"string"==typeof e});if(0!==i.length){var o={databaseIds:i},s=!0,u=!1,l=void 0;try{for(var d,c,f=(d=n.csvUpdatedHandlers,function(t){if(Array.isArray(t))return e(t)}(d)||function(e){if("undefined"!=typeof Symbol&&null!=e[Symbol.iterator]||null!=e["@@iterator"])return Array.from(e)}(d)||function(t,r){if(t){if("string"==typeof t)return e(t,void 0);var n=Object.prototype.toString.call(t).slice(8,-1);if("Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n)return Array.from(n);if("Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))return e(t,void 0)}}(d)||function(){throw TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}())[Symbol.iterator]();!(s=(c=f.next()).done);s=!0){var g=c.value;try{g(o)}catch(e){}}}catch(e){u=!0,l=e}finally{try{s||null==f.return||f.return()}finally{if(u)throw l}}}}}}})}return n(r,[{key:"addRecord",value:function(e){return this.bridge.call("database.addRecord",e)}},{key:"updateRecord",value:function(e){return this.bridge.call("database.updateRecord",e)}},{key:"deleteRecord",value:function(e){return this.bridge.call("database.deleteRecord",e)}},{key:"getSchema",value:function(e){return this.bridge.call("database.getSchema",e)}},{key:"getRecord",value:function(e){return this.bridge.call("database.getRecord",e)}},{key:"query",value:function(e){return this.bridge.call("database.query",e)}},{key:"aggregate",value:function(e){return this.bridge.call("database.aggregate",e)}},{key:"onUpdated",value:function(e){var t=this;return this.csvUpdatedHandlers.add(e),function(){t.csvUpdatedHandlers.delete(e)}}},{key:"uploadImage",value:function(e){return this.bridge.call("database.uploadImage",e)}},{key:"uploadFile",value:function(e){return this.bridge.call("database.uploadFile",e,6e5)}},{key:"getDownloadUrl",value:function(e){return this.bridge.call("database.getDownloadUrl",e)}},{key:"getPreviewUrl",value:function(e){return this.bridge.call("database.getPreviewUrl",e)}},{key:"getUserInfo",value:function(){return this.bridge.call("database.getUserInfo")}}]),r}(),s=window;s.__SMART_PAGE__=s.__SMART_PAGE__||{},s.__SMART_PAGE__.database=new o;})();</script><script data-smartpage-injected="scroll">;(function(){
+  "use strict";
+  if (window.__SMARTPAGE_BOTTOM_SPACE__) return;
+  window.__SMARTPAGE_BOTTOM_SPACE__ = true;
+
+  var READY = "SMARTPAGE_SPACE_READY";
+  var SET = "SMARTPAGE_SET_BOTTOM_SPACE";
+  var prevPadding = "";
+  var prevTransition = "";
+  var basePadding = "0px";
+  var applied = false;
+
+  function apply(space) {
+    var body = document.body;
+    if (!body) return;
+    if (space > 0) {
+      if (!applied) {
+        // 记录原值：内联值用于还原，计算值作叠加基线
+        prevPadding = body.style.paddingBottom;
+        prevTransition = body.style.transition;
+        try {
+          var cs = window.getComputedStyle(body).paddingBottom;
+          if (cs) basePadding = cs;
+        } catch (_) {}
+        applied = true;
+      }
+      body.style.transition = "padding-bottom 0.2s ease";
+      body.style.paddingBottom = "calc(" + basePadding + " + " + space + "px)";
+    } else if (applied) {
+      body.style.paddingBottom = prevPadding;
+      body.style.transition = prevTransition;
+      applied = false;
+    }
+  }
+
+  function onMsg(e) {
+    if (e.source !== window.parent) return;
+    var d = e.data;
+    if (!d || d.type !== SET) return;
+    var space = typeof d.space === "number" && d.space > 0 ? d.space : 0;
+    apply(space);
+  }
+  window.addEventListener("message", onMsg);
+
+  function notifyReady() {
+    if (window.parent && window.parent !== window) {
+      try { window.parent.postMessage({ type: READY }, "*"); } catch (_) {}
+    }
+  }
+  notifyReady();
+  if (document.readyState !== "complete") {
+    window.addEventListener("load", notifyReady, { once: true });
+  }
+})();
+</script></head>
+<body data-page-node-id="AxaWttmJsXMpFyu4OLC2YZ" class="dark" style="">
+<div data-page-node-id="PlIGG76td3APHjZlfQMdHG" class="page">
+  <div data-page-node-id="jS8XQT8MMipmqIfyavm57M" class="topbar">
+    <a data-page-node-id="8mPlvc8CAhTbUoTab6vxNa" class="back"><!--pnid:Smq1dSJkXY1pMxm9PhW30p-->←</a>
+    <div data-page-node-id="RFmTFGafYTUiMcYbe14IEr" class="titles">
+      <div data-page-node-id="fzJYXK3kWKNe7kTY04Dmd5" class="name auto-width" data-key="name" id="topName" style="min-width: 39px;" contenteditable="true">恕火</div>
+      <div data-page-node-id="lPkOK7Pfx5y7WloMIp2agj" class="count"><b data-page-node-id="6bRm5yfh0o5qeYZZPreRSk" id="tweetCount">疼痛和爱 实为同义</b></div>
+    </div>
+  <div data-page-node-id="YVa1smN6U83pjsTxNcR2R1" class="top-tools">
+      <button data-page-node-id="CDB22ws0OxWNUprkSkF6qJ" class="tool-btn" id="themeBtn" onclick="toggleTheme()" title="切换白天/黑夜"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"></path></svg></button>
+      <button data-page-node-id="WHV6lBQzCDneRgrXJyi7Zq" class="tool-btn" id="lockBtn" onclick="onLockClick()" title="锁定（恢复只读）" style="color: rgb(29, 155, 240);"><svg viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5"></rect><path d="M8.5 10.5V8a3.5 3.5 0 0 1 6.9-.9"></path></svg></button>
+    </div></div>
+
+  <div data-page-node-id="sVKxijgEPQMtei2bt5FdsN" class="collapse-wrap" id="collapseWrap" style="max-height: 2000px;"><label data-page-node-id="QVx6A2jVzUEFl3Qe7tUDj5" class="banner" id="bannerWrap" title="点击可换封面图（编辑模式）">
+    <img data-page-node-id="B3m9o6vRDcsIvMCxnv36yY" alt="cover" id="bannerImg" src="assets/f001.webp">
+    <input data-page-node-id="kKjIKprUFF6hAqyRxbIa5u" accept="image/*" class="px-input" id="bannerPicker" type="file">
+  </label><div data-page-node-id="4HvZpwBeLNI00VwQ0c9juC" class="profile-head">
+    <div data-page-node-id="3u69Na2O48VoWnM4IB1AFD" class="avatar-row">
+      <label data-page-node-id="4mazWVwt9IYCWt1AU6S7vO" class="avatar" id="avatarWrap" title="点击可换头像（编辑模式）">
+        <img data-page-node-id="PbxpIHXCdkIpTQ5BctMBau" alt="avatar" id="avatarImg" src="assets/f000.webp">
+        <input data-page-node-id="wJTEicckLULA5MeWuaKb5v" accept="image/*" class="px-input" id="avatarPicker" type="file">
+      </label>
+      <div data-page-node-id="vvwvkudGEqPf0Gxg04Ot0E" class="follow-wrap">
+        <span data-page-node-id="EZqi0GMcWyayBZ70H0HSlx" class="clock" id="clock">21:19</span>
+        <button data-page-node-id="rTn9qhYHwcCRqID6Z0xN6T" class="follow-btn auto-height" id="followBtn" onclick="toggleFollow(this)">Follow</button>
+      </div>
+    </div>
+  </div><div data-page-node-id="Dx8rg7McU8yRtZaHewiktb" class="profile-info">
+    <div data-page-node-id="KhBVwYsqOZg7mJ9bxTrjFK" class="display-name auto-width" data-key="name" style="min-width: 49px;" contenteditable="true"><!--pnid:xPVpa22oyieLtW0viqpiH1-->恕火</div>
+    <div data-page-node-id="5t62bDENd4gdYQYL85Xak1" class="handle auto-width" data-key="handle" style="min-width: 82px;" contenteditable="true">@Kealis01</div>
+    <div data-page-node-id="AB98O7Ejb3uWEzYLDeivKL" class="stats">
+      <span data-page-node-id="3ORW0ebenY4d3RasFIwrTP"><b data-page-node-id="efZ97umcPPLChXv0ZNAlBv" class="auto-width" data-key="following" style="min-width: 14px;" contenteditable="true">5</b><!--pnid:tzv3Kzbc2B1mKnfVmoBBph--> Following</span>
+      <span data-page-node-id="kbtK15hCxiIy8uoMLBrnE0"><b data-page-node-id="hsTANoNcnpd2B8ctaYhdqc" class="auto-width" data-key="followers" style="min-width: 44px;" contenteditable="true">1538</b><!--pnid:fc4avWFfcN10g7zP9nDzbB--> Followers</span>
+    </div>
+    <div data-page-node-id="zAwmH2qq3nlKJD2mgFJU0J" class="info-row">
+      <span data-page-node-id="gktJb9ds5rWZNb1j8sv1mY" class="info-item">
+        <svg data-page-node-id="8wT5HFvdIuGi8teyabgYwp" viewBox="0 0 24 24"><path data-page-node-id="QaNB1Tol8xRTz8o1EgbPig" d="M12 7c-1.93 0-3.5 1.57-3.5 3.5S10.07 14 12 14s3.5-1.57 3.5-3.5S13.93 7 12 7zm0 5c-.827 0-1.5-.673-1.5-1.5S11.173 9 12 9s1.5.673 1.5 1.5S12.827 12 12 12zm0-10c-4.687 0-8.5 3.813-8.5 8.5 0 5.967 7.621 11.116 7.945 11.332l.555.37.555-.371c.324-.216 7.945-5.365 7.945-11.332C20.5 5.813 16.687 2 12 2zm0 17.77c-1.665-1.241-6.5-5.196-6.5-9.27C5.5 6.916 8.416 4 12 4s6.5 2.916 6.5 6.5c0 4.073-4.835 8.028-6.5 9.27z"></path></svg>
+        <span data-page-node-id="TJjXryDHfsFOpWMKlZ6313" class="loc auto-width" data-key="location" style="min-width: 94px;" contenteditable="true">十年 光年外</span>
+      </span>
+      <span data-page-node-id="NqzSuT7ImvOA0X65WqKsWL" class="info-item">
+        <svg data-page-node-id="SRGZfJRip8hEL4oN2gInkE" viewBox="0 0 24 24"><path data-page-node-id="n99ciuUimsdOE7hbQToVC3" d="M6 3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h5V5H6zm7 0v14h5a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-5z"></path></svg>
+        <span data-page-node-id="7fsz6cIz4w3BIbTilOQgUn" class="fun auto-width" data-key="fun" style="min-width: 73px;" contenteditable="true">赛博牛郎</span>
+      </span>
+    </div>
+    <div data-page-node-id="7V7qpjFJkGaM0mwPZx22Gy" class="bio auto-height" data-key="bio" contenteditable="true">我因命运拨弄你的残缺而来</div>
+  </div></div>
+
+  
+
+  
+
+  <div data-page-node-id="FSKNtKHBL00nmF4jd2JQiB" class="tabs" id="tabs"><div class="tab auto-width">关于<span class="tab-del" title="删除分栏">×</span></div><div class="tab auto-width active">评价<span class="tab-del" title="删除分栏">×</span></div><div class="tab auto-width">话术<span class="tab-del" title="删除分栏">×</span></div><div class="tab auto-width">头牌<span class="tab-del" title="删除分栏">×</span></div><div class="tab auto-width">须知<span class="tab-del" title="删除分栏">×</span></div><span class="tab-add" title="新建分栏">＋</span></div>
+
+  <div data-page-node-id="2hW4vX61BIPtprxG7oZrIX" id="tweets"><a class="pin-link" href="https://www.kdocs.cn/l/cjxiUMXMUw4H" target="_blank" rel="noopener noreferrer">
+      <span class="pin-icon-wrap"><svg class="pin-icon" viewBox="0 0 24 24"><path d="M16 3v5.06l2.53 2.53c.29.29.47.68.47 1.1V13a1 1 0 0 1-1 1h-5v5.5a1.5 1.5 0 0 1-3 0V14H5a1 1 0 0 1-1-1v-1.31c0-.42.18-.81.47-1.1L7 8.06V3a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1z"></path></svg></span>
+      <span class="pin-text">文档跳转</span>
+      <span class="pin-arrow">›</span></a><div class="tweet">
+      <button class="tweet-del" onclick="event.stopPropagation();deleteTweet(0)" title="删除">🗑</button>
+      <div class="tweet-head">
+        <div class="tweet-avatar"><img src="assets/f000.webp" alt=""></div>
+        <div><span class="t-name auto-width" data-key="t.name" data-i="0" contenteditable="true" style="min-width: 39px;">恕火</span><span class="t-handle auto-width" data-key="t.handle" data-i="0" contenteditable="true" style="min-width: 82px;">@Kealis01</span></div>
+      </div>
+      <div class="tweet-body auto-height" data-key="t.text" data-i="0" style="font-size:16px" contenteditable="true">珍藏卡面</div>
+      <div class="photo-grid grid-9"><label class="gcell" data-ti="0" data-ii="0"><img src="assets/f004.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="0">
+      </label><label class="gcell" data-ti="0" data-ii="1"><img src="assets/f005.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="1">
+      </label><label class="gcell" data-ti="0" data-ii="2"><img src="assets/f006.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="2">
+      </label><label class="gcell" data-ti="0" data-ii="3"><img src="assets/f007.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="3">
+      </label><label class="gcell" data-ti="0" data-ii="4"><img src="assets/f008.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="4">
+      </label><label class="gcell" data-ti="0" data-ii="5"><img src="assets/f009.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="5">
+      </label><label class="gcell" data-ti="0" data-ii="6"><img src="assets/f010.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="6">
+      </label><label class="gcell" data-ti="0" data-ii="7"><img src="assets/f011.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="7">
+      </label><label class="gcell" data-ti="0" data-ii="8"><img src="assets/f012.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="0" data-ii="8">
+      </label></div><label class="photo-add">＋ 添加/替换图片（可多选）
+         <input type="file" class="px-input" accept="image/*" multiple="" data-ti="0" data-ii="-1">
+       </label>
+      <div class="tweet-meta">
+        <span class="views"><b data-key="t.views" data-i="0" class="auto-width" contenteditable="true" style="min-width: 34px;">999</b> 次查看</span>
+        <span class="ref-link">查看引用 &gt;</span>
+      </div>
+      <div class="actions">
+        <span class="action" data-i="0" data-k="replies"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01z"></path></svg><span class="num auto-height" data-key="t.replies" data-i="0" contenteditable="true">99+</span></span>
+        <span class="action" data-i="0" data-k="retweets"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h9.5a3.5 3.5 0 0 1 3.5 3.5V13"></path><path d="M17 5l3 3-3 3"></path><path d="M17 16H7.5A3.5 3.5 0 0 1 4 12.5V11"></path><path d="M7 19l-3-3 3-3"></path></svg><span class="num auto-height" data-key="t.retweets" data-i="0" contenteditable="true">33</span></span>
+        <span class="action"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.5"></path><path d="M8 7l4-3.5L16 7"></path><path d="M5 13.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"></path></svg><span class="num auto-height" data-key="t.shares" data-i="0" contenteditable="true">46</span></span>
+      </div></div><div class="tweet">
+      <button class="tweet-del" onclick="event.stopPropagation();deleteTweet(1)" title="删除">🗑</button>
+      <div class="tweet-head">
+        <div class="tweet-avatar"><img src="assets/f000.webp" alt=""></div>
+        <div><span class="t-name auto-width" data-key="t.name" data-i="1" contenteditable="true" style="min-width: 39px;">恕火</span><span class="t-handle auto-width" data-key="t.handle" data-i="1" contenteditable="true" style="min-width: 82px;">@Kealis01</span></div>
+      </div>
+      <div class="tweet-body auto-height" data-key="t.text" data-i="1" style="font-size:16px" contenteditable="true">文评</div>
+      <div class="photo-grid grid-9"><label class="gcell" data-ti="1" data-ii="0"><img src="assets/f013.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="0">
+      </label><label class="gcell" data-ti="1" data-ii="1"><img src="assets/f014.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="1">
+      </label><label class="gcell" data-ti="1" data-ii="2"><img src="assets/f015.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="2">
+      </label><label class="gcell" data-ti="1" data-ii="3"><img src="assets/f016.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="3">
+      </label><label class="gcell" data-ti="1" data-ii="4"><img src="assets/f017.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="4">
+      </label><label class="gcell" data-ti="1" data-ii="5"><img src="assets/f018.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="5">
+      </label><label class="gcell" data-ti="1" data-ii="6"><img src="assets/f019.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="6">
+      </label><label class="gcell" data-ti="1" data-ii="7"><img src="assets/f020.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="7">
+      </label><label class="gcell" data-ti="1" data-ii="8"><img src="assets/f021.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="1" data-ii="8">
+      </label></div><label class="photo-add">＋ 添加/替换图片（可多选）
+         <input type="file" class="px-input" accept="image/*" multiple="" data-ti="1" data-ii="-1">
+       </label>
+      <div class="tweet-meta">
+        <span class="views"><b data-key="t.views" data-i="1" class="auto-width" contenteditable="true" style="min-width: 34px;">999</b> 次查看</span>
+        <span class="ref-link">查看引用 &gt;</span>
+      </div>
+      <div class="actions">
+        <span class="action" data-i="1" data-k="replies"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01z"></path></svg><span class="num auto-height" data-key="t.replies" data-i="1" contenteditable="true">81</span></span>
+        <span class="action" data-i="1" data-k="retweets"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h9.5a3.5 3.5 0 0 1 3.5 3.5V13"></path><path d="M17 5l3 3-3 3"></path><path d="M17 16H7.5A3.5 3.5 0 0 1 4 12.5V11"></path><path d="M7 19l-3-3 3-3"></path></svg><span class="num auto-height" data-key="t.retweets" data-i="1" contenteditable="true">22</span></span>
+        <span class="action"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.5"></path><path d="M8 7l4-3.5L16 7"></path><path d="M5 13.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"></path></svg><span class="num auto-height" data-key="t.shares" data-i="1" contenteditable="true">16</span></span>
+      </div></div><div class="tweet">
+      <button class="tweet-del" onclick="event.stopPropagation();deleteTweet(2)" title="删除">🗑</button>
+      <div class="tweet-head">
+        <div class="tweet-avatar"><img src="assets/f000.webp" alt=""></div>
+        <div><span class="t-name auto-width" data-key="t.name" data-i="2" contenteditable="true" style="min-width: 39px;">恕火</span><span class="t-handle auto-width" data-key="t.handle" data-i="2" contenteditable="true" style="min-width: 82px;">@Kealis01</span></div>
+      </div>
+      <div class="tweet-body auto-height" data-key="t.text" data-i="2" style="font-size:16px" contenteditable="true">Dom/下位相关</div>
+      <div class="photo-grid grid-9"><label class="gcell" data-ti="2" data-ii="0"><img src="assets/f022.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="0">
+      </label><label class="gcell" data-ti="2" data-ii="1"><img src="assets/f023.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="1">
+      </label><label class="gcell" data-ti="2" data-ii="2"><img src="assets/f024.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="2">
+      </label><label class="gcell" data-ti="2" data-ii="3"><img src="assets/f025.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="3">
+      </label><label class="gcell" data-ti="2" data-ii="4"><img src="assets/f026.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="4">
+      </label><label class="gcell" data-ti="2" data-ii="5"><img src="assets/f027.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="5">
+      </label><label class="gcell" data-ti="2" data-ii="6"><img src="assets/f028.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="6">
+      </label><label class="gcell" data-ti="2" data-ii="7"><img src="assets/f029.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="7">
+      </label><label class="gcell" data-ti="2" data-ii="8"><img src="assets/f030.webp" alt="">
+        <input type="file" class="px-input" accept="image/*" data-ti="2" data-ii="8">
+      </label></div><label class="photo-add">＋ 添加/替换图片（可多选）
+         <input type="file" class="px-input" accept="image/*" multiple="" data-ti="2" data-ii="-1">
+       </label>
+      <div class="tweet-meta">
+        <span class="views"><b data-key="t.views" data-i="2" class="auto-width" contenteditable="true" style="min-width: 34px;">757</b> 次查看</span>
+        <span class="ref-link">查看引用 &gt;</span>
+      </div>
+      <div class="actions">
+        <span class="action" data-i="2" data-k="replies"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01z"></path></svg><span class="num auto-height" data-key="t.replies" data-i="2" contenteditable="true">99+</span></span>
+        <span class="action" data-i="2" data-k="retweets"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h9.5a3.5 3.5 0 0 1 3.5 3.5V13"></path><path d="M17 5l3 3-3 3"></path><path d="M17 16H7.5A3.5 3.5 0 0 1 4 12.5V11"></path><path d="M7 19l-3-3 3-3"></path></svg><span class="num auto-height" data-key="t.retweets" data-i="2" contenteditable="true">82</span></span>
+        <span class="action"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.5"></path><path d="M8 7l4-3.5L16 7"></path><path d="M5 13.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"></path></svg><span class="num auto-height" data-key="t.shares" data-i="2" contenteditable="true">67</span></span>
+      </div></div><div class="tweet">
+      <button class="tweet-del" onclick="event.stopPropagation();deleteTweet(3)" title="删除">🗑</button>
+      <div class="tweet-head">
+        <div class="tweet-avatar"><img src="assets/f000.webp" alt=""></div>
+        <div><span class="t-name auto-width" data-key="t.name" data-i="3" contenteditable="true" style="min-width: 39px;">恕火</span><span class="t-handle auto-width" data-key="t.handle" data-i="3" contenteditable="true" style="min-width: 82px;">@Kealis01</span></div>
+      </div>
+      <div class="tweet-body auto-height" data-key="t.text" data-i="3" style="font-size:16px" contenteditable="true">仅展示部分评价，有效评价共收录100+</div>
+      <label class="photo-empty">
+        ＋ 点击从相册添加图片
+        <input type="file" class="px-input" accept="image/*" multiple="" data-ti="3" data-ii="-1">
+      </label>
+      <div class="tweet-meta">
+        <span class="views"><b data-key="t.views" data-i="3" class="auto-width" contenteditable="true" style="min-width: 34px;">752</b> 次查看</span>
+        <span class="ref-link">查看引用 &gt;</span>
+      </div>
+      <div class="actions">
+        <span class="action" data-i="3" data-k="replies"><svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01z"></path></svg><span class="num auto-height" data-key="t.replies" data-i="3" contenteditable="true">75</span></span>
+        <span class="action" data-i="3" data-k="retweets"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h9.5a3.5 3.5 0 0 1 3.5 3.5V13"></path><path d="M17 5l3 3-3 3"></path><path d="M17 16H7.5A3.5 3.5 0 0 1 4 12.5V11"></path><path d="M7 19l-3-3 3-3"></path></svg><span class="num auto-height" data-key="t.retweets" data-i="3" contenteditable="true">42</span></span>
+        <span class="action"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.5"></path><path d="M8 7l4-3.5L16 7"></path><path d="M5 13.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"></path></svg><span class="num auto-height" data-key="t.shares" data-i="3" contenteditable="true">25</span></span>
+      </div></div></div>
+</div>
+
+
+
+
+<input data-page-node-id="aJXfXIPiycJMCYEoNOGQ6W" accept=".html,.htm,.json" id="importPicker" type="file" style="display:none"><input data-page-node-id="LQQtGhFpd8T7Qg02TEM8xU" accept="audio/mpeg,audio/mp3,audio/*" id="musicPicker" type="file" style="display:none">
+<audio data-page-node-id="c46OzU5CDutKikeRc3CEtb" id="bgm" loop="" playsinline="" preload="auto" src="assets/f002.mp3" webkit-playsinline="" x5-playsinline=""></audio>
+
+<div data-page-node-id="DZvOF3YnV4mBICNryxTLv8" class="hint show" id="hint" style="display:none">已解锁：点文字可直接修改，操作在右上角菜单</div>
+
+<!--pnid:HktVv9RajDj2PtFm5Akkwl--><!-- 图片大图灯箱 -->
+<div data-page-node-id="KQNi6Uw0BPbDe1ca0wGLIT" class="lightbox" id="lightbox">
+  <div data-page-node-id="YxIVuHcXQMQHj4uTxvsAZE" class="lb-tip"><!--pnid:ydShhfkPDVNm8zrSoQMev0-->双指缩放 · 点空白关闭</div>
+  <button data-page-node-id="eIXsg9FxkXcv1MabQLcgIy" aria-label="关闭" class="lb-close" id="lbClose"><!--pnid:ajyFpAS6WQd1IMSdBCTnyN-->×</button>
+  <button data-page-node-id="PspKsEJkmX2yS50Do28Ca9" aria-label="上一张" class="lb-nav lb-prev" id="lbPrev"><!--pnid:1TDO4eEK4pCtXb71j18yiO-->‹</button>
+  <img data-page-node-id="V3IS1g3ZYHudrak3VoK2QJ" alt="" id="lbImg" src="file:///D:/360%E6%9E%81%E9%80%9F%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E8%BD%BD/%E4%B8%BB%E9%A1%B5-%E6%81%95%E7%81%AB%20(6).html" style="transform:scale(1)">
+  <button data-page-node-id="6yn3hjiLwssxshpXwN4tMb" aria-label="下一张" class="lb-nav lb-next" id="lbNext"><!--pnid:hAsDbgryvftzGYiDgCrkrM-->›</button>
+  <div data-page-node-id="7a02wBvwue6DhfBu3D0uUA" class="lb-count" id="lbCount"></div>
+</div>
+
+<script data-page-node-id="HRKw2s1S5dzkAxBH00pLT6" data-pnid-children="SNuuFsbeLUTCRfVMD4lHRy">window.EMBEDDED_DATA = {"name":"恕火","handle":"@Kealis01","following":"5","followers":"1538","bio":"我因命运拨弄你的残缺而来","clock":"02:24","location":"十年 光年外","fun":"赛博牛郎","tabs":["关于","评价","话术","头牌","须知"],"followLabel":"来见我","music":"assets/f002.mp3","avatar":"assets/f000.webp","banner":"assets/f001.webp","tabTweets":[[{"name":"恕火","handle":"@Kealis01","time":"测试8","text":"-23 T 双鱼 Intj\n-营业时间14-20 22-3\n-建模-0耳努/狼尾  2号耳鸟\n-开放业务病恋 虚恋 Dom 树洞 病教\n-可以是你的妻子姐姐主人妈妈好好老师心理医生或x玩具振动棒。\n\n-以上 乐意效劳","views":"13681","replies":"99+","retweets":"34","likesX":"69","bookmarks":"测试14","shares":"69","images":["assets/f003.webp"]}],[{"name":"恕火","handle":"@Kealis01","time":"测试8","text":"珍藏卡面","views":"999","replies":"99+","retweets":"33","likesX":"测试13","bookmarks":"测试14","shares":"46","images":["assets/f004.webp","assets/f005.webp","assets/f006.webp","assets/f007.webp","assets/f008.webp","assets/f009.webp","assets/f010.webp","assets/f011.webp","assets/f012.webp"]},{"name":"恕火","handle":"@Kealis01","time":"测试17","text":"文评","views":"999","replies":"81","retweets":"22","likesX":"测试22","bookmarks":"测试23","shares":"16","images":["assets/f013.webp","assets/f014.webp","assets/f015.webp","assets/f016.webp","assets/f017.webp","assets/f018.webp","assets/f019.webp","assets/f020.webp","assets/f021.webp"]},{"name":"恕火","handle":"@Kealis01","time":"测试26","text":"Dom/下位相关","views":"757","replies":"99+","retweets":"82","likesX":"测试31","bookmarks":"测试32","shares":"67","images":["assets/f022.webp","assets/f023.webp","assets/f024.webp","assets/f025.webp","assets/f026.webp","assets/f027.webp","assets/f028.webp","assets/f029.webp","assets/f030.webp"]},{"name":"恕火","handle":"@Kealis01","time":"刚刚","text":"仅展示部分评价，有效评价共收录100+","views":"752","replies":"75","retweets":"42","likesX":"0","bookmarks":"0","shares":"25","images":[],"fontSize":16}],[{"name":"恕火","handle":"@Kealis01","time":"测试35","text":"随笔","views":"测试37","replies":"72","retweets":"4","likesX":"测试40","bookmarks":"测试41","shares":"8","images":["assets/f031.webp","assets/f032.webp"]},{"name":"恕火","handle":"@Kealis01","time":"测试44","text":"单内","views":"测试46","replies":"8","retweets":"2","likesX":"测试49","bookmarks":"测试50","shares":"0","images":["assets/f033.webp"]},{"name":"恕火","handle":"@Kealis01","time":"测试53","text":"单内","views":"测试55","replies":"7","retweets":"8","likesX":"测试58","bookmarks":"测试59","shares":"4","images":["assets/f034.webp"]}],[{"name":"恕火","handle":"@Kealis01","time":"测试62","text":"光年外·9月业绩第一","views":"78","replies":"4","retweets":"8","likesX":"测试67","bookmarks":"测试68","shares":"3","images":["assets/f035.webp"]},{"name":"恕火","handle":"@Kealis01","time":"测试71","text":"光年外·8月业绩第二","views":"8","replies":"3","retweets":"7","likesX":"测试76","bookmarks":"测试77","shares":"1","images":["assets/f036.webp"]},{"name":"恕火","handle":"@Kealis01","time":"测试80","text":"光年外·7月业绩第二","views":"49","replies":"9","retweets":"7","likesX":"测试85","bookmarks":"测试86","shares":"3","images":["assets/f037.webp"]},{"name":"恕火","handle":"@Kealis01","time":"刚刚","text":"仅展示近期卡面，头牌/天花板共收录10+","views":"72","replies":"7","retweets":"4","likesX":"0","bookmarks":"0","shares":"2","images":[],"fontSize":16}],[{"name":"恕火","handle":"@Kealis01","time":"刚刚","text":"°必读-单内\n1. 极少接存单／长存，消单能力有限。\n2. 存单有概率取不出来，所以无存单期限（优先遵循团内规定）我会主动联系消／退。\n3. 高恋≠舔狗，拒低恋情况下还要惹我变脸转低无很快，谢谢。\n4. 恋单不强制要求恋人身份，把我当做对你感兴趣的人即可。\n5. 不接修罗/反修，原则上拒人妻/有暧昧/有心选，硬点默认想玩ntr，追求刺激请加钱，包让你爽。（此项拒客诉，后续概不负责）\n6. 不接同行／未成年，如果你是并且我们已经见面，请不要让我知道。否则后续概不负责、\n7. 存单默认我主动约时间，两次约不到默认你约我。不接受以此为理由的客诉、\n8. 没有记住旧人的义务，时隔太久且无记忆点默认第一次见。不接受以此为理由的客诉、\n9. 退/换/不满意当面说。你方下线且未说明任何原因，我等待处理的时间也计算在单内。不接受以此为理由的客诉、\n\n°选读-单外\n10. 出来工作，意图单外恋爱/发展/暧昧/卡bug加好友请自退。没有建立除板陪外任何关系的可能。\n11. 因为我产生的情绪，如在单内说明我会哄你，单外说明仅道歉其余不受理。不接受以此为理由的客诉、\n12. 计时单默认每小时加一次指定／凌晨，未满半／1h计价方式：取单时间／60＊单价+其余加价。\n13. 尊重＞理解，受到无理由诋毁／辱骂／人身攻击／不合理要求会立刻终止对话，退单不退钱。（此条单内外通用）\n14. 对固板除外的人的情感状态没有兴趣，不论是你的〈现任／前任／爱陪／前爱陪〉，不必告诉我。。\n15. 主观上没有任何想要伤害任何人的打算，我是正常人，请把我当成正常人。\n16. 如果你要衡量给我花钱的意义，不论如何决定请不要让我知道，罪不至此。\n17. 明确自己的目的，爱我请学会尊重和陪伴，把我当做工具请给我足够的报酬。\n18. 对感情的真挚和奉献近乎执拗，不想听对不起和祝福语，爱我只有一种方式：给我同等的回馈。","views":"786","replies":"88","retweets":"45","likesX":"125","bookmarks":"0","shares":"42","images":[],"fontSize":14},{"name":"恕火","handle":"@Kealis01","time":"刚刚","text":"左为病单须知  右为个人须知。有部分重叠，一般情况查阅文字版即可。","views":"457","replies":"44","retweets":"28","likesX":"0","bookmarks":"0","shares":"76","images":["assets/f038.jpg","assets/f039.jpg"],"fontSize":16}]],"tabLinks":[{"text":"文档跳转","url":"https://www.kdocs.cn/l/ct7VdNb7QHX5"},{"text":"文档跳转","url":"https://www.kdocs.cn/l/cjxiUMXMUw4H"},{"text":"文档跳转","url":"https://www.kdocs.cn/l/cb3QLdEwRtOu"},{"text":"文档跳转","url":"https://www.kdocs.cn/l/cdJd0tiU8cbM"},{"text":"文档","url":"https://www.kdocs.cn/l/cmIkuqQQXBzq"}]};</script>
+<script data-page-node-id="jacV8qwdEikrE7xbg4O55b" data-pnid-children="thEGAek3EW4mfGwe9P55fC">
+// ---------- 数据 ----------
+const defaultData = {
+  name: "测试1",
+  handle: "@测试2",
+  following: "测试3",
+  followers: "测试4",
+  bio: "测试5",
+  clock: "02:24",
+  location: "测试51",
+  fun: "测试52",
+  tabs: ["测试53", "测试54", "测试55", "测试56"],
+  followLabel: "测试108",
+  music: "",
+  avatar: "https://picsum.photos/seed/testavatar/300/300",
+  banner: "https://picsum.photos/seed/testbanner/1200/400",
+  // 每个分栏各自的内容（tab 0 / 1 / 2 / 3），除测试54外均无推文
+  tabTweets: [
+    // 分栏1（测试53）：两条 文字 + 单张图片 推文
+    [
+      {name:"测试96", handle:"@测试97", time:"测试98", text:"测试99", views:"测试100", replies:"测试101", retweets:"测试102", likesX:"测试103", bookmarks:"测试104", shares:"测试105",
+       images:["https://picsum.photos/seed/t53a/800/600"]},
+      {name:"测试109", handle:"@测试110", time:"测试111", text:"测试112", views:"测试113", replies:"测试114", retweets:"测试115", likesX:"测试116", bookmarks:"测试117", shares:"测试118",
+       images:["https://picsum.photos/seed/t53b/800/600"]}
+    ],
+    // 分栏2（测试54）：三条九宫格图片 + 文案推文
+    [
+      {name:"测试6", handle:"@测试7", time:"测试8", text:"测试9", views:"测试10", replies:"测试11", retweets:"测试12", likesX:"测试13", bookmarks:"测试14", shares:"测试87",
+       images:["https://picsum.photos/seed/g1a/400/400","https://picsum.photos/seed/g1b/400/400","https://picsum.photos/seed/g1c/400/400","https://picsum.photos/seed/g1d/400/400","https://picsum.photos/seed/g1e/400/400","https://picsum.photos/seed/g1f/400/400","https://picsum.photos/seed/g1g/400/400","https://picsum.photos/seed/g1h/400/400","https://picsum.photos/seed/g1i/400/400"]},
+      {name:"测试15", handle:"@测试16", time:"测试17", text:"测试18", views:"测试19", replies:"测试20", retweets:"测试21", likesX:"测试22", bookmarks:"测试23", shares:"测试88",
+       images:["https://picsum.photos/seed/g2a/400/400","https://picsum.photos/seed/g2b/400/400","https://picsum.photos/seed/g2c/400/400","https://picsum.photos/seed/g2d/400/400","https://picsum.photos/seed/g2e/400/400","https://picsum.photos/seed/g2f/400/400","https://picsum.photos/seed/g2g/400/400","https://picsum.photos/seed/g2h/400/400","https://picsum.photos/seed/g2i/400/400"]},
+      {name:"测试24", handle:"@测试25", time:"测试26", text:"测试27", views:"测试28", replies:"测试29", retweets:"测试30", likesX:"测试31", bookmarks:"测试32", shares:"测试89",
+       images:["https://picsum.photos/seed/g3a/400/400","https://picsum.photos/seed/g3b/400/400","https://picsum.photos/seed/g3c/400/400","https://picsum.photos/seed/g3d/400/400","https://picsum.photos/seed/g3e/400/400","https://picsum.photos/seed/g3f/400/400","https://picsum.photos/seed/g3g/400/400","https://picsum.photos/seed/g3h/400/400","https://picsum.photos/seed/g3i/400/400"]}
+    ],
+    // 分栏3（测试55）：三条 文字 + 单张图片 推文
+    [
+      {name:"测试33", handle:"@测试34", time:"测试35", text:"测试36", views:"测试37", replies:"测试38", retweets:"测试39", likesX:"测试40", bookmarks:"测试41", shares:"测试90",
+       images:["https://picsum.photos/seed/s1/800/600"]},
+      {name:"测试42", handle:"@测试43", time:"测试44", text:"测试45", views:"测试46", replies:"测试47", retweets:"测试48", likesX:"测试49", bookmarks:"测试50", shares:"测试91",
+       images:["https://picsum.photos/seed/s2/800/600"]},
+      {name:"测试51", handle:"@测试52", time:"测试53", text:"测试54", views:"测试55", replies:"测试56", retweets:"测试57", likesX:"测试58", bookmarks:"测试59", shares:"测试92",
+       images:["https://picsum.photos/seed/s3/800/600"]}
+    ],
+    // 分栏4（测试56）：三条 文字 + 单张图片 推文
+    [
+      {name:"测试60", handle:"@测试61", time:"测试62", text:"测试63", views:"测试64", replies:"测试65", retweets:"测试66", likesX:"测试67", bookmarks:"测试68", shares:"测试93",
+       images:["https://picsum.photos/seed/s4/800/600"]},
+      {name:"测试69", handle:"@测试70", time:"测试71", text:"测试72", views:"测试73", replies:"测试74", retweets:"测试75", likesX:"测试76", bookmarks:"测试77", shares:"测试94",
+       images:["https://picsum.photos/seed/s5/800/600"]},
+      {name:"测试78", handle:"@测试79", time:"测试80", text:"测试81", views:"测试82", replies:"测试83", retweets:"测试84", likesX:"测试85", bookmarks:"测试86", shares:"测试95",
+       images:["https://picsum.photos/seed/s6/800/600"]}
+    ]
+  ],
+};
+
+// ---------- 渲染 ----------
+const icons = {
+  reply:'<svg viewBox="0 0 24 24"><path d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01z"/></svg>',
+  retweet:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8h9.5a3.5 3.5 0 0 1 3.5 3.5V13"/><path d="M17 5l3 3-3 3"/><path d="M17 16H7.5A3.5 3.5 0 0 1 4 12.5V11"/><path d="M7 19l-3-3 3-3"/></svg>',
+  like:'<svg viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></svg>',
+  bookmark:'<svg viewBox="0 0 24 24"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71V4.5zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5h-11z"/></svg>',
+  share:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14V3.5"/><path d="M8 7l4-3.5L16 7"/><path d="M5 13.5V18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/></svg>'
+};
+
+let activeTab = 0;  // 默认停在「测试54」分栏
+let data = loadData();
+normalize();
+let editMode = false;
+
+function loadData(){
+  // 【已改造】始终以内嵌数据 EMBEDDED_DATA 为唯一数据源，
+  // 忽略浏览器 localStorage 的旧缓存 —— 作者每次发布后，所有访客
+  // （含已有缓存的电脑）都会立刻看到最新发布版，无需清缓存。
+  const EMB = (typeof window.EMBEDDED_DATA !== "undefined") ? window.EMBEDDED_DATA : null;
+  if(EMB){
+    try{ localStorage.setItem("x-kealis-final-v1", JSON.stringify(EMB)); }catch(e){}
+    return JSON.parse(JSON.stringify(EMB));
+  }
+  try{
+    const saved = localStorage.getItem("x-kealis-final-v1");
+    if(saved) return JSON.parse(saved);
+  }catch(e){}
+  return JSON.parse(JSON.stringify(defaultData));
+}
+function saveData(){
+  // 说明：data.music 体积巨大(数MB)，且音乐本身已内嵌在 HTML 里，
+  // 无需写入 localStorage（会撑爆 5MB 配额导致整份数据保存失败）。
+  // 这里保存时剥离 music/超大内联资源，只存用户编辑出来的内容。
+  const slim = Object.assign({}, data);
+  slim.music = (data.music && data.music.length > 1000) ? "" : (data.music || "");
+  let json = JSON.stringify(slim);
+  try{
+    localStorage.setItem("x-kealis-final-v1", json);
+    window.__saveFailed = false;
+  }catch(e){
+    // 仍然超限：逐步剥离图片类大资源后重试
+    try{
+      const lighter = Object.assign({}, slim);
+      lighter.avatar = ""; lighter.banner = "";
+      lighter.tabTweets = (slim.tabTweets||[]).map(list =>
+        (list||[]).map(t => Object.assign({}, t, {images: []})));
+      localStorage.setItem("x-kealis-final-v1", JSON.stringify(lighter));
+      window.__saveFailed = false;
+      if(typeof showHint === "function") showHint("已保存（图片过多，暂未缓存图片）");
+    }catch(e2){
+      window.__saveFailed = true;
+      if(typeof showHint === "function") showHint("内容太大暂存失败：请减少图片后重试");
+    }
+  }
+}
+// 兼容旧缓存：补齐缺失字段
+function normalize(){
+  const d = JSON.parse(JSON.stringify(defaultData));
+  // 仅补齐缺失的顶层字段，绝不覆盖用户已有内容/结构
+  data = Object.assign({}, d, data);
+  if(!Array.isArray(data.tabs) || data.tabs.length === 0){ data.tabs = d.tabs.slice(); }
+  if(!Array.isArray(data.tabTweets)){ data.tabTweets = []; }
+  // 以 tabs 为准对齐推文栏数量（新增栏补空数组，多余裁掉）
+  while(data.tabTweets.length < data.tabs.length){ data.tabTweets.push([]); }
+  if(data.tabTweets.length > data.tabs.length){ data.tabTweets.length = data.tabs.length; }
+  // 清洗分栏名尾部误入的 × 删除键字符（历史数据自愈）
+  data.tabs = data.tabs.map(n => String(n == null ? "" : n).replace(/×+\s*$/,""));
+  if(typeof data.location === "undefined") data.location = d.location;
+  if(typeof data.fun === "undefined") data.fun = d.fun;
+  // 【新增】分栏置顶跳转条数据：与分栏数量对齐
+  if(!Array.isArray(data.tabLinks)) data.tabLinks = [];
+  while(data.tabLinks.length < data.tabs.length){
+    data.tabLinks.push({text:"测试文本", url:"https://example.com/test"});
+  }
+  if(data.tabLinks.length > data.tabs.length) data.tabLinks.length = data.tabs.length;
+  if(activeTab >= data.tabs.length) activeTab = 0;
+}
+// 九宫格图片
+// 说明：编辑模式下，每个图片区域用 <label> 内嵌 <input type="file">，
+// 点击时由浏览器原生触起相册/文件选择，兼容性最好（不依赖 JS 触发）
+function gridHtml(images, ti){
+  if(!images || !images.length){
+    if(editMode){
+      return `<label class="photo-empty">
+        ＋ 点击从相册添加图片
+        <input type="file" class="px-input" accept="image/*" multiple data-ti="${ti}" data-ii="-1">
+      </label>`;
+    }
+    return "";
+  }
+  const n = images.length;
+  const cls = "grid-" + (n >= 9 ? 9 : n);
+  const cells = images.map((src, ii) => {
+    const inner = `<img src="${escapeHtml(src)}" alt="">`;
+    if(editMode){
+      return `<label class="gcell" data-ti="${ti}" data-ii="${ii}">${inner}
+        <input type="file" class="px-input" accept="image/*" data-ti="${ti}" data-ii="${ii}">
+      </label>`;
+    }
+    // 非编辑模式：点击看大图（把整组图片传入，支持左右切换）
+    return `<div class="gcell" data-ti="${ti}" data-ii="${ii}" onclick="openLightbox(${ti}, ${ii})">${inner}</div>`;
+  }).join("");
+  const addTip = editMode
+    ? `<label class="photo-add">＋ 添加/替换图片（可多选）
+         <input type="file" class="px-input" accept="image/*" multiple data-ti="${ti}" data-ii="-1">
+       </label>`
+    : "";
+  return `<div class="photo-grid ${cls}">${cells}</div>${addTip}`;
+}
+
+// ---------- 图片大图灯箱 ----------
+let lbList = [];      // 当前图片组
+let lbIndex = 0;      // 当前索引
+
+function openLightbox(ti, ii){
+  if(editMode) return;
+  const list = (data.tabTweets[activeTab] || [])[ti];
+  if(!list || !list.images || !list.images.length) return;
+  lbList = list.images.slice();
+  lbIndex = Math.max(0, Math.min(ii, lbList.length - 1));
+  showLbImage();
+  const lb = document.getElementById("lightbox");
+  lb.classList.toggle("multi", lbList.length > 1);
+  lb.classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+function showLbImage(){
+  const img = document.getElementById("lbImg");
+  img.style.transform = "scale(1)";
+  img.src = lbList[lbIndex];
+  const cnt = document.getElementById("lbCount");
+  cnt.textContent = lbList.length > 1 ? (lbIndex + 1) + " / " + lbList.length : "";
+}
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("show");
+  document.body.style.overflow = "";
+}
+function lbGo(step){
+  if(!lbList.length) return;
+  lbIndex = (lbIndex + step + lbList.length) % lbList.length;
+  showLbImage();
+}
+// 双击放大 / 再次双击还原
+function lbToggleZoom(){
+  const img = document.getElementById("lbImg");
+  const cur = img.style.transform || "scale(1)";
+  img.style.transform = cur === "scale(1)" ? "scale(2.2)" : "scale(1)";
+}
+// 双指缩放
+(function bindPinch(){
+  let startDist = 0, scale = 1;
+  const lb = document.getElementById("lightbox");
+  const img = document.getElementById("lbImg");
+  lb.addEventListener("touchstart", e => {
+    if(e.touches.length === 2){
+      startDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
+                             e.touches[0].clientY - e.touches[1].clientY);
+      const m = /scale\(([\d.]+)\)/.exec(img.style.transform || "");
+      scale = m ? parseFloat(m[1]) : 1;
+    }
+  }, {passive:true});
+  lb.addEventListener("touchmove", e => {
+    if(e.touches.length === 2 && startDist){
+      e.preventDefault();
+      const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX,
+                           e.touches[0].clientY - e.touches[1].clientY);
+      const s = Math.max(1, Math.min(4, scale * d / startDist));
+      img.style.transform = "scale(" + s.toFixed(2) + ")";
+    }
+  }, {passive:false});
+  lb.addEventListener("touchend", () => { startDist = 0; });
+})();
+
+document.getElementById("lbClose").onclick = closeLightbox;
+document.getElementById("lbPrev").onclick = e => { e.stopPropagation(); lbGo(-1); };
+document.getElementById("lbNext").onclick = e => { e.stopPropagation(); lbGo(1); };
+document.getElementById("lightbox").addEventListener("click", e => {
+  // 点空白处关闭，点图片本身则切换缩放
+  if(e.target.id === "lightbox") closeLightbox();
+});
+document.getElementById("lbImg").addEventListener("click", e => { e.stopPropagation(); lbToggleZoom(); });
+document.getElementById("lbImg").addEventListener("dblclick", e => { e.preventDefault(); lbToggleZoom(); });
+document.addEventListener("keydown", e => {
+  const lb = document.getElementById("lightbox");
+  if(!lb.classList.contains("show")) return;
+  if(e.key === "Escape") closeLightbox();
+  if(e.key === "ArrowLeft") lbGo(-1);
+  if(e.key === "ArrowRight") lbGo(1);
+});
+// 左右滑动切换
+(function bindSwipe(){
+  let x0 = null, y0 = null;
+  const lb = document.getElementById("lightbox");
+  lb.addEventListener("touchstart", e => {
+    if(e.touches.length === 1){ x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }
+  }, {passive:true});
+  lb.addEventListener("touchend", e => {
+    if(x0 === null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - x0, dy = t.clientY - y0;
+    if(lbList.length > 1 && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)){
+      lbGo(dx < 0 ? 1 : -1);
+    }
+    x0 = y0 = null;
+  }, {passive:true});
+})();
+
+function render(){
+  document.getElementById("topName").textContent = data.name;
+  document.querySelector(".handle").textContent = data.handle;
+  const fb = document.querySelectorAll(".stats b");
+  fb[0].textContent = data.following;
+  fb[1].textContent = data.followers;
+  document.querySelector(".bio").textContent = data.bio;
+  const loc = document.querySelector(".info-row .loc");
+  loc.textContent = data.location;
+  const fun = document.querySelector(".info-row .fun");
+  fun.textContent = data.fun;
+  buildTabs();
+  document.getElementById("clock").textContent = data.clock;
+  document.getElementById("avatarImg").src = data.avatar;
+  document.getElementById("bannerImg").src = data.banner;
+
+  const list = data.tabTweets[activeTab] || [];
+  document.getElementById("tweetCount").textContent = "疼痛和爱 实为同义";
+
+  const container = document.getElementById("tweets");
+  container.innerHTML = "";
+
+  // 【新增】分栏置顶跳转条：位于推文列表最上方，点击可跳转外部链接
+  const pin = (data.tabLinks && data.tabLinks[activeTab]) || null;
+  if(pin && (String(pin.text||"").trim() || String(pin.url||"").trim())){
+    const pe = document.createElement("a");
+    pe.className = "pin-link";
+    pe.href = pin.url || "javascript:void(0)";
+    pe.target = "_blank";
+    pe.rel = "noopener noreferrer";
+    pe.innerHTML = `
+      <span class="pin-icon-wrap"><svg class="pin-icon" viewBox="0 0 24 24"><path d="M16 3v5.06l2.53 2.53c.29.29.47.68.47 1.1V13a1 1 0 0 1-1 1h-5v5.5a1.5 1.5 0 0 1-3 0V14H5a1 1 0 0 1-1-1v-1.31c0-.42.18-.81.47-1.1L7 8.06V3a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1z"/></svg></span>
+      <span class="pin-text">${escapeHtml(pin.text || "点击跳转")}</span>
+      <span class="pin-arrow">&rsaquo;</span>`;
+    // 【已修复 v2】只读模式完全不 preventDefault、不做 JS 跳转，
+    // 交给 <a href target="_blank"> 原生跳转（微信里唯一可靠的方式）。
+    // 之前 preventDefault + window.open/location.href 兜底，在微信里全被拦，
+    // 反而把原生跳转堵死了 —— 这才是点了没反应的真正原因。
+    pe.addEventListener("click", function(ev){
+      if(editMode){
+        ev.preventDefault();
+        ev.stopPropagation();
+        window.openPinModal(activeTab);
+      }
+    });
+    container.appendChild(pe);
+  }
+
+  if(list.length === 0){
+    container.innerHTML += `<div class="empty">暂时没有内容</div>`;
+  }
+  list.forEach((t, i) => {
+    const el = document.createElement("div");
+    el.className = "tweet";
+    el.innerHTML = `
+      <button class="tweet-del" onclick="event.stopPropagation();deleteTweet(${i})" title="删除">🗑</button>
+      <div class="tweet-head">
+        <div class="tweet-avatar"><img src="${escapeHtml(t.avatar || data.avatar)}" alt=""></div>
+        <div><span class="t-name" data-key="t.name" data-i="${i}">${escapeHtml(t.name)}</span><span class="t-handle" data-key="t.handle" data-i="${i}">${escapeHtml(t.handle)}</span></div>
+      </div>
+      <div class="tweet-body" data-key="t.text" data-i="${i}" style="font-size:${t.fontSize||16}px">${escapeHtml(t.text)}</div>
+      ${gridHtml(t.images, i)}
+      <div class="tweet-meta">
+        <span class="views"><b data-key="t.views" data-i="${i}">${escapeHtml(t.views)}</b> 次查看</span>
+        <span class="ref-link">查看引用 &gt;</span>
+      </div>
+      <div class="actions">
+        <span class="action" data-i="${i}" data-k="replies">${icons.reply}<span class="num" data-key="t.replies" data-i="${i}">${escapeHtml(t.replies)}</span></span>
+        <span class="action" data-i="${i}" data-k="retweets">${icons.retweet}<span class="num" data-key="t.retweets" data-i="${i}">${escapeHtml(t.retweets)}</span></span>
+        <span class="action">${icons.share}<span class="num" data-key="t.shares" data-i="${i}">${escapeHtml(t.shares || "")}</span></span>
+      </div>`;
+    container.appendChild(el);
+  });
+
+  // 高亮当前分栏 + 删除标
+  document.querySelectorAll("#tabs .tab").forEach((t, i) => {
+    t.classList.toggle("active", i === activeTab);
+    // 编辑模式下的删除小标
+    let del = t.querySelector(".tab-del");
+    if(!del){ del = document.createElement("span"); del.className = "tab-del"; del.textContent = "×"; t.appendChild(del); }
+    del.onclick = (e)=>{ e.stopPropagation(); deleteTab(i); };
+  });
+
+  bindEditable();
+  bindActions();
+  bindTabs();
+  bindPhotoPickers();
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+// ---------- 可编辑绑定（统一 data-key 机制） ----------
+// 单行字段：随输入自适应宽度
+const AUTO_WIDTH_KEYS = ["name","handle","following","followers","location","fun","tab.0","tab.1","tab.2","tab.3",
+  "t.name","t.handle","t.views","t.likes","t.bookmarks"];
+
+function fitWidth(el){
+  if(!el.classList.contains("auto-width")) return;
+  const span = document.createElement("span");
+  const cs = getComputedStyle(el);
+  span.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font:${cs.font};letter-spacing:${cs.letterSpacing};`;
+  span.textContent = el.textContent || "";
+  document.body.appendChild(span);
+  const w = span.getBoundingClientRect().width;
+  document.body.removeChild(span);
+  el.style.minWidth = Math.ceil(w + 4) + "px";
+}
+
+function bindEditable(){
+  const all = document.querySelectorAll("[data-key]");
+  all.forEach(el => {
+    const k = el.getAttribute("data-key");
+    // 标记自适应类型
+    if(AUTO_WIDTH_KEYS.includes(k)){
+      el.classList.add("auto-width");
+    }else{
+      el.classList.add("auto-height");
+    }
+    if(editMode){
+      el.setAttribute("contenteditable", "true");
+      fitWidth(el);
+      el.oninput = () => {
+        if(k.startsWith("t.")){
+          const field = k.split(".")[1];
+          const idx = parseInt(el.getAttribute("data-i") || "0", 10);
+          data.tabTweets[activeTab][idx][field] = el.textContent;
+        }else if(k.startsWith("tab.")){
+          const idx = parseInt(k.split(".")[1], 10);
+          data.tabs[idx] = el.textContent;
+        }else{
+          data[k] = el.textContent;
+          if(k === "name"){
+            document.querySelectorAll('[data-key="name"]').forEach(e2 => {
+              if(e2 !== el && e2.textContent !== el.textContent){ e2.textContent = el.textContent; fitWidth(e2); }
+            });
+          }
+        }
+        fitWidth(el);
+        saveData();
+      };
+      el.onblur = saveData;
+    }else{
+      el.removeAttribute("contenteditable");
+      el.style.minWidth = "";
+      el.oninput = null;
+      el.onblur = null;
+    }
+  });
+}
+
+// 全局手动同步保单：编辑模式下捕获输入，确保一定写入数据
+function syncFromDOM(){
+  document.querySelectorAll("[data-key]").forEach(el => {
+    const k = el.getAttribute("data-key");
+    if(!k) return;
+    if(k.startsWith("t.")){
+      const idx = parseInt(el.getAttribute("data-i") || "0", 10);
+      data.tabTweets[activeTab][idx][k.split(".")[1]] = el.textContent;
+    }else if(k.startsWith("tab.")){
+      data.tabs[parseInt(k.split(".")[1],10)] = el.textContent.replace(/×+\s*$/,"");
+    }else{
+      data[k] = el.textContent;
+    }
+  });
+  saveData();
+}
+
+// 分栏切换
+function buildTabs(){
+  const tabsBox = document.getElementById("tabs");
+  if(!tabsBox) return;
+  tabsBox.innerHTML = "";
+  data.tabs.forEach((name, i) => {
+    const tab = document.createElement("div");
+    tab.className = "tab auto-width" + (i === activeTab ? " active" : "");
+    // 注意：不设 data-key，避免编辑同步把「×」删除键文本写回分栏名
+    tab.textContent = name;
+    if(editMode){
+      const del = document.createElement("span");
+      del.className = "tab-del";
+      del.textContent = "×";
+      del.title = "删除分栏";
+      del.onclick = (e)=>{ e.stopPropagation(); deleteTab(i); };
+      tab.appendChild(del);
+    }
+    tab.onclick = (e) => {
+      if(e.target.classList.contains("tab-del")) return;
+      window.selectTab(i);
+    };
+    tab.ondblclick = (e) => {
+      if(!editMode) return;
+      e.stopPropagation(); openTabModal(i);
+    };
+    tabsBox.appendChild(tab);
+  });
+  if(editMode){
+    const add = document.createElement("span");
+    add.className = "tab-add";
+    add.textContent = "＋";
+    add.title = "新建分栏";
+    add.onclick = (e)=>{ e.stopPropagation(); openTabModal(); };
+    tabsBox.appendChild(add);
+  }
+  // 保持当前分栏可见
+  const cur = tabsBox.querySelectorAll(".tab")[activeTab];
+  if(cur && cur.scrollIntoView){
+    try{ cur.scrollIntoView({inline:"nearest", block:"nearest"}); }catch(e){}
+  }
+}
+
+// ===== 仿 X 交互：切换分栏 / 滚动时把 banner+简介区整体平移收起 =====
+function ensureCollapseWrap(){
+  if(document.getElementById("collapseWrap")) return document.getElementById("collapseWrap");
+  const page = document.querySelector(".page") || document.body;
+  const banner = document.querySelector(".banner");
+  const phead = document.querySelector(".profile-head");
+  const pinfo = document.querySelector(".profile-info");
+  if(!banner || !phead) return null;
+  const wrap = document.createElement("div");
+  wrap.className = "collapse-wrap";
+  wrap.id = "collapseWrap";
+  banner.parentNode.insertBefore(wrap, banner);
+  wrap.appendChild(banner);
+  wrap.appendChild(phead);
+  if(pinfo) wrap.appendChild(pinfo);
+  return wrap;
+}
+function collapseProfile(on){
+  const wrap = ensureCollapseWrap();
+  if(!wrap) return;
+  // 【已修复】用 max-height 收合替代原来的 transform + 负 margin 方案：
+  //   1) 不再破坏 .tabs 的 position:sticky 吸顶
+  //   2) 不会因为负 margin 把页面高度压到不足而"滚不动、回不到顶部"
+  //   3) max-height/opacity 过渡更轻量，配合 will-change 更顺滑
+  if(on){
+    if(wrap.classList.contains("collapsing") && window.__profileCollapsed) return;
+    const h = Math.max(wrap.scrollHeight, wrap.offsetHeight) || 0;
+    wrap.style.maxHeight = h + "px";
+    void wrap.offsetHeight;               // 强制布局，确保过渡起点正确
+    wrap.classList.add("collapsing");
+    wrap.style.maxHeight = "0px";
+  }else{
+    const h = Math.max(wrap.scrollHeight, wrap.offsetHeight) || 0;
+    wrap.classList.remove("collapsing");
+    wrap.style.maxHeight = h + "px";
+    // 展开动画结束后恢复默认上限，方便后续内容/窗口变化
+    clearTimeout(window.__expandTimer);
+    window.__expandTimer = setTimeout(function(){
+      if(!window.__profileCollapsed) wrap.style.maxHeight = "2000px";
+    }, 430);
+  }
+  window.__profileCollapsed = !!on;
+}
+// 切换分栏入口统一走这里（原绑定的 onclick 会调用 selectTab）
+window.selectTab = function(i){
+  if(typeof i !== "number" || i < 0 || i >= data.tabs.length) return;
+  const changed = (i !== activeTab);
+  activeTab = i;
+  render();
+  if(changed){
+    // 仿 X：切换分栏即把 banner+简介区整体平移收起，推文列表上移
+    collapseProfile(true);
+  }else{
+    // 点当前分栏：收合<->展开 切换
+    collapseProfile(!window.__profileCollapsed);
+  }
+};
+// 滚回顶部时自动展开（兼容 body / window 两种滚动容器）
+(function bindScrollExpand(){
+  let ticking = false;
+  function getTop(){
+    return Math.max(
+      window.scrollY || 0,
+      document.documentElement.scrollTop || 0,
+      document.body.scrollTop || 0
+    );
+  }
+  function onScroll(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      // 【已修复】阈值放宽到 24px；并且页面本身没有滚动空间时也允许展开，
+      // 避免「内容太短 -> 滚不动 -> 永远卡在收合态」。
+      var noScrollRoom = (document.documentElement.scrollHeight - window.innerHeight) <= 8;
+      if(window.__profileCollapsed && (getTop() <= 24 || noScrollRoom)){
+        collapseProfile(false);
+      }
+      ticking = false;
+    });
+  }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  document.addEventListener("scroll", onScroll, {passive:true, capture:true});
+  // 触摸上滑（手指向下拖动页面看历史内容）时若仍在顶部附近，也触发展开
+  let tsY = 0;
+  window.addEventListener("touchstart", function(e){
+    if(e.touches && e.touches.length === 1) tsY = e.touches[0].clientY;
+  }, {passive:true});
+  window.addEventListener("touchmove", function(e){
+    if(!window.__profileCollapsed || !e.touches || e.touches.length !== 1) return;
+    var dy = e.touches[0].clientY - tsY;   // >0 表示手指下滑（向上翻看）
+    if(dy > 4 && getTop() <= 24) collapseProfile(false);
+  }, {passive:true});
+})();
+
+function bindTabs(){
+  // 统一由 buildTabs 重建分栏条（含删除键与「＋」按钮），避免重复追加
+  buildTabs();
+}
+
+function toggleEdit(){
+  if(editMode){ syncFromDOM(); saveData(); }
+  editMode = !editMode;
+  document.body.classList.toggle("editing", editMode);
+  if(editMode){ showHint("编辑模式：点文字直接改，点图片可换图"); }
+  render();
+}
+// 解锁成功进入编辑
+function enterEdit(){
+  editMode = true;
+  document.body.classList.add("editing");
+  render();
+  const bar = document.querySelector(".edit-bar");
+  if(bar) bar.classList.add("open");
+  showHint("已解锁：点文字可直接修改，操作在右上角菜单");
+}
+function lockBack(){
+  if(editMode){ syncFromDOM(); saveData(); }
+  editMode = false;
+  document.body.classList.remove("editing");
+  const bar = document.querySelector(".edit-bar");
+  if(bar) bar.classList.remove("open");
+}
+
+let hintTimer;
+function showHint(msg){
+  const h = document.getElementById("hint");
+  if(!h) return;
+  h.textContent = msg;
+  h.classList.add("show");
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(()=>{ h.classList.remove("show"); }, 2600);
+}
+
+// ---------- 交互 ----------
+function toggleFollow(btn){
+  const on = btn.classList.toggle("following");
+  // 取消关注显示 Follow；关注后文字为可编辑的「测试+数字」
+  if(!on){
+    btn.removeAttribute("contenteditable");
+    btn.removeAttribute("data-key");
+    btn.textContent = "Follow";
+  }else{
+    btn.textContent = data.followLabel || "测试96";
+    btn.setAttribute("contenteditable","true");
+    btn.setAttribute("data-key","followLabel");
+    if(typeof bindEditable === "function") bindEditable();
+  }
+}
+function bindActions(){
+  document.querySelectorAll(".act-like").forEach(a => {
+    a.onclick = () => {
+      a.classList.toggle("liked");
+    };
+  });
+}
+
+// 时钟走动
+setInterval(()=>{
+  const now = new Date();
+  document.getElementById("clock").textContent =
+    String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0");
+}, 1000);
+
+// ---------- 从本地相册选择图片 ----------
+
+// 读文件为 dataURL（存 localStorage 用；为控制体积会压缩）
+function readImage(file, maxSize){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let { width: w, height: h } = img;
+        const scale = Math.min(1, maxSize / Math.max(w, h));
+        w = Math.round(w * scale); h = Math.round(h * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ---------- 图片选择处理（label + input 原生触发，兼容移动端相册） ----------
+async function handleFiles(files, ti, ii, multi){
+  let list = [...files];
+  if(multi) list = list.slice(0, 9); else list = list.slice(0, 1);
+  if(!list.length) return;
+  const out = [];
+  for(const f of list){
+    try{ out.push(await readImage(f, multi ? 1000 : 1200)); }catch(e){}
+  }
+  if(!out.length) return;
+
+  if(ti === "avatar"){ data.avatar = out[0]; }
+  else if(ti === "banner"){ data.banner = out[0]; }
+  else{
+    const idx = parseInt(ti, 10);
+    if(ii >= 0){
+      // 替换单张
+      data.tabTweets[activeTab][idx].images[ii] = out[0];
+    }else{
+      // 整组替换/添加
+      data.tabTweets[activeTab][idx].images = out;
+    }
+  }
+  saveData();
+  render();
+  showHint(multi ? `已更新为 ${out.length} 张图片` : "图片已更新");
+}
+
+// 统一绑定：任何 .px-input 的 change 事件
+function bindPhotoPickers(){
+  // 头像 / 封面
+  const av = document.getElementById("avatarPicker");
+  const bn = document.getElementById("bannerPicker");
+  if(av) av.onchange = async e => { await handleFiles(e.target.files, "avatar", -1, false); av.value=""; };
+  if(bn) bn.onchange = async e => { await handleFiles(e.target.files, "banner", -1, false); bn.value=""; };
+
+  // 推文内所有图片输入
+  document.querySelectorAll(".px-input").forEach(inp => {
+    // 头像/封面已在上面单独处理
+    if(inp.id === "avatarPicker" || inp.id === "bannerPicker") return;
+    inp.onchange = async e => {
+      const ti = inp.getAttribute("data-ti");
+      const ii = parseInt(inp.getAttribute("data-ii") || "-1", 10);
+      const multi = inp.hasAttribute("multiple");
+      await handleFiles(e.target.files, ti, ii, multi);
+      inp.value = "";
+    };
+  });
+}
+
+// ---------- 唱片音乐播放器 ----------
+const bgm = document.getElementById("bgm");
+const vinyl = {classList:{add(){},remove(){},toggle(){},contains(){return false;}}};
+let musicPlaying = false;
+
+// 让 audio 元素具备移动端内联播放能力（微信/iOS 必需）
+bgm.setAttribute("playsinline", "");
+bgm.setAttribute("webkit-playsinline", "");
+bgm.setAttribute("x5-playsinline", "");
+bgm.volume = 1;
+bgm.muted = false;
+
+function applyMusic(){
+  if(data.music){
+    // 用 data URL 时，先清空再赋值可强制重新加载，避免微信不识别
+    if(bgm.getAttribute("src") !== data.music){
+      bgm.pause();
+      bgm.setAttribute("src", data.music);
+      bgm.load();
+    }
+    // 兜底：有些环境用 property 赋值更可靠
+    if(!bgm.getAttribute("src")) bgm.src = data.music;
+  }
+}
+
+// 真正的播放：带重试，解决微信“点了没反应/没声音”
+function playMusic(){
+  if(!data.music){ return; }
+  bgm.muted = false;
+  if(bgm.volume === 0) bgm.volume = 1;
+  // 若尚未加载，先强制加载
+  if(bgm.readyState === 0 || !bgm.getAttribute("src")){
+    bgm.setAttribute("src", data.music);
+    bgm.load();
+  }
+  const doPlay = () => {
+    const p = bgm.play();
+    if(p && p.then){
+      p.then(()=>{ musicPlaying = true; vinyl.classList.add("playing"); })
+       .catch(err => {
+         const name = err && err.name ? err.name : "";
+         if(name === "NotAllowedError"){
+           showHint("请再点一下唱片（浏览器要求手动触发）");
+         }else if(name === "NotSupportedError"){
+           showHint("这个音频格式不支持，请换 mp3 文件");
+         }else{
+           showHint("播放失败：" + (err && err.message ? err.message : "未知原因"));
+         }
+         musicPlaying = false; vinyl.classList.remove("playing");
+       });
+    }else{
+      musicPlaying = true; vinyl.classList.add("playing");
+    }
+  };
+  // 若还没准备好数据，等 canplay 再播，避免 iOS 上 play 被拒
+  if(bgm.readyState >= 2){
+    doPlay();
+  }else{
+    const onCan = () => { bgm.removeEventListener("canplaythrough", onCan); doPlay(); };
+    bgm.addEventListener("canplaythrough", onCan);
+    // 兜底：300ms 后无论如何试一次，防止事件不触发
+    setTimeout(()=>{ if(bgm.paused) doPlay(); }, 400);
+  }
+}
+
+function toggleMusic(){
+  if(!data.music){ showHint("暂无音乐"); return; }
+  if(!bgm.paused){
+    bgm.pause(); musicPlaying = false;
+    showHint("已暂停");
+  }else{
+    playMusic();
+  }
+}
+
+document.getElementById("musicPicker").onchange = async e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  // 简单校验：非音频直接提示
+  if(!/audio|mp3|mpeg|m4a|aac|wav|ogg/i.test(f.type + f.name)){
+    showHint("请选择 mp3 / m4a / wav 等音频文件");
+    e.target.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    data.music = ev.target.result;
+    saveData();
+    applyMusic();
+    musicPlaying = false; vinyl.classList.remove("playing");
+    // 不自动播放：微信/iOS 会拦截非手势触发的 play，导致"没声音"的误解
+    // 统一由用户点唱片来播放，稳定可靠
+    showHint("音乐已添加 ✓ 点右下角唱片播放");
+  };
+  reader.readAsDataURL(f);
+  e.target.value = "";
+};
+bgm.addEventListener("ended", ()=>{ musicPlaying=false; vinyl.classList.remove("playing"); });
+bgm.addEventListener("error", ()=>{
+  const e = bgm.error;
+  // 1=ABORTED 2=NETWORK 3=DECODE 4=SRC_NOT_SUPPORTED
+  if(e && e.code === 4) showHint("音频格式不支持，请换 mp3 文件");
+  else showHint("音频加载失败，请重新选择 mp3 文件");
+});
+applyMusic();
+
+// 微信/iOS 音频解锁：首次用户交互时"预热"播放，之后 play() 才不会被拦
+// 编辑模式下 Follow 按钮不响应关注切换，避免影响编辑
+// 重置
+window.addEventListener("keydown", e=>{
+  if(e.shiftKey && e.key === "R"){ localStorage.removeItem("x-kealis-final-v1"); localStorage.removeItem("x-profile-data-v2"); localStorage.removeItem("x-profile-data"); data = loadData(); normalize(); render(); showHint("已恢复默认测试数据"); }
+});
+
+// ---------- 导出 / 导入 ----------
+// 导出：把当前全部数据打包成"自带数据的完整网页"下载
+function exportPage(){
+  syncFromDOM();
+  saveData();
+  const json = JSON.stringify(data);
+  // 用当前文档结构，注入最新数据
+  // 【已修复】原正则 `<script>` 精确匹配，但真实标签带 data-page-node-id 等属性，
+  // 导致匹配失败、导出文件里仍是旧数据。这里改为按 `window.EMBEDDED_DATA =` 定位。
+  const html = document.documentElement.outerHTML
+    .replace(/(window\.EMBEDDED_DATA\s*=\s*)[\s\S]*?((?:;)?<\/script>)/,
+             "$1" + json.replace(/</g,"\\u003c") + "$2");
+  const blob = new Blob([html], {type:"text/html;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "主页-" + (data.name||"我的数据") + ".html";
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  showHint("已导出网页文件");
+}
+
+// 导入：读取之前导出的 .json / .html 文件，把数据搬进来
+document.getElementById("importPicker").onchange = e => {
+  const f = e.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try{
+      let obj = null;
+      const txt = ev.target.result;
+      const m = txt.match(/window\.EMBEDDED_DATA = ([\s\S]*?);<\/script>/);
+      if(m) obj = JSON.parse(m[1]);
+      else obj = JSON.parse(txt);
+      if(!obj || !obj.tabTweets) throw new Error("no data");
+      data = obj; normalize(); saveData(); render();
+      showHint("导入成功");
+    }catch(err){ showHint("文件格式不对"); }
+  };
+  reader.readAsText(f);
+  e.target.value = "";
+};
+
+
+// ================= 解锁版新增功能 =================
+const PW_KEY = "x-kealis-unlocked-v1";
+const PASSWORD = "Kealis001";
+
+function closeMask(id){
+  const m = document.getElementById(id);
+  if(m) m.classList.remove("show");
+}
+function openMask(id){
+  const m = document.getElementById(id);
+  if(m) m.classList.add("show");
+}
+function updateLockUI(){
+  const b = document.getElementById("lockBtn");
+  if(!b) return;
+  const unlocked = localStorage.getItem(PW_KEY) === "1";
+  b.innerHTML = unlocked ? SVG_UNLOCK : SVG_LOCK;
+  b.style.color = unlocked ? "#1d9bf0" : "";
+  b.title = unlocked ? "锁定（恢复只读）" : "解锁编辑";
+}
+function toggleEditMenu(){
+  const bar = document.querySelector(".edit-bar");
+  if(bar) bar.classList.toggle("open");
+}
+function onLockClick(){
+  if(localStorage.getItem(PW_KEY) === "1"){
+    // 【已改造】编辑模式下点锁 = 收起/展开操作菜单（不再直接退出编辑）
+    if(editMode){ toggleEditMenu(); }
+    else { enterEdit(); }
+    return;
+  }
+  openMask("pwMask");
+  const inp = document.getElementById("pwInput");
+  inp.value = ""; setTimeout(()=>inp.focus(), 50);
+}
+function tryUnlock(){
+  const inp = document.getElementById("pwInput");
+  if(inp.value === PASSWORD){
+    localStorage.setItem(PW_KEY, "1");
+    closeMask("pwMask");
+    updateLockUI();
+    enterEdit();
+  }else{
+    inp.value = "";
+    inp.placeholder = "密码错误，请重试";
+    inp.focus();
+  }
+}
+
+// ---------- 昼夜模式 ----------
+const THEME_KEY = "x-kealis-theme-v1";
+const SVG_MOON = '<svg viewBox="0 0 24 24"><path d="M20.5 13.2A8.5 8.5 0 1 1 10.8 3.5a7 7 0 0 0 9.7 9.7z"/></svg>';
+const SVG_SUN  = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M19.1 4.9l-1.6 1.6M6.5 17.5l-1.6 1.6"/></svg>';
+const SVG_LOCK = '<svg viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>';
+const SVG_UNLOCK = '<svg viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 6.9-.9"/></svg>';
+function applyTheme(dark){
+  document.body.classList.toggle("dark", dark);
+  const b = document.getElementById("themeBtn");
+  if(b) b.innerHTML = dark ? SVG_SUN : SVG_MOON;
+}
+function toggleTheme(){
+  const dark = !document.body.classList.contains("dark");
+  applyTheme(dark);
+  try{ localStorage.setItem(THEME_KEY, dark ? "dark" : "light"); }catch(e){}
+}
+(function initTheme(){
+  let saved = null;
+  try{ saved = localStorage.getItem(THEME_KEY); }catch(e){}
+  if(!saved){
+    // 首次：跟随系统
+    saved = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+  }
+  applyTheme(saved === "dark");
+})();
+
+// ---------- 城市 + 实时温度（Open-Meteo，免费无 Key） ----------
+/* 天气功能已移除 */
+
+
+// ---------- 推文增删 ----------
+let editingTweetIndex = -1;  // -1 = 新增
+function openTweetModal(idx){
+  editingTweetIndex = (typeof idx === "number") ? idx : -1;
+  const title = document.getElementById("twModalTitle");
+  const g = id => document.getElementById(id);
+  if(editingTweetIndex >= 0){
+    const t = data.tabTweets[activeTab][editingTweetIndex];
+    title.textContent = "编辑推文";
+    g("twText").value = t.text || "";
+    g("twTime").value = t.time || "";
+    g("twName").value = t.name || "";
+    g("twViews").value = t.views || "";
+    g("twReplies").value = t.replies || "";
+    g("twRetweets").value = t.retweets || "";
+    g("twLikes").value = t.likesX || "";
+    g("twBookmarks").value = t.bookmarks || "";
+    g("twShares").value = t.shares || "";
+  }else{
+    title.textContent = "添加推文";
+    ["twText","twTime","twName","twViews","twReplies","twRetweets","twLikes","twBookmarks","twShares"].forEach(k=>g(k).value="");
+    g("twName").value = data.name || "";
+    g("twTime").value = "刚刚";
+  }
+  g("twImgs").value = "";
+  // 回填字号
+  const fs = (editingTweetIndex >= 0 ? (data.tabTweets[activeTab][editingTweetIndex].fontSize || 16) : 16);
+  g("twFontSize").value = fs;
+  g("fsVal").textContent = fs + "px";
+  g("twText").style.fontSize = fs + "px";
+  // 填充所属分栏下拉
+  const sel = g("twTab");
+  sel.innerHTML = data.tabs.map((n,i)=>'<option value="'+i+'">'+escapeHtml(n)+'</option>').join("");
+  sel.value = String(activeTab);
+  openMask("twMask");
+}
+function onFontSizeInput(){
+  const v = document.getElementById("twFontSize").value;
+  document.getElementById("fsVal").textContent = v + "px";
+  document.getElementById("twText").style.fontSize = v + "px";
+}
+function confirmTweet(){
+  const g = id => document.getElementById(id);
+  const obj = {
+    name: g("twName").value.trim() || data.name,
+    handle: data.handle,
+    time: g("twTime").value.trim() || "刚刚",
+    text: g("twText").value,
+    views: g("twViews").value.trim() || "0",
+    replies: g("twReplies").value.trim() || "0",
+    retweets: g("twRetweets").value.trim() || "0",
+    likesX: g("twLikes").value.trim() || "0",
+    bookmarks: g("twBookmarks").value.trim() || "0",
+    shares: g("twShares").value.trim() || "0",
+    images: [],
+    fontSize: parseInt(g("twFontSize").value, 10) || 16
+  };
+  const files = [...g("twImgs").files].slice(0, 9);
+  const finish = imgs => {
+    obj.images = imgs;
+    let targetTab = parseInt(g("twTab").value, 10);
+    if(!(targetTab >= 0 && targetTab < data.tabs.length)) targetTab = activeTab;
+    if(!data.tabTweets[targetTab]) data.tabTweets[targetTab] = [];
+    if(editingTweetIndex >= 0){
+      const old = data.tabTweets[activeTab][editingTweetIndex];
+      if(!imgs.length && old.images) obj.images = old.images; // 未选新图则保留原图
+      if(targetTab !== activeTab){
+        data.tabTweets[activeTab].splice(editingTweetIndex, 1); // 移动到所选分栏
+        data.tabTweets[targetTab].push(obj);
+      }else{
+        data.tabTweets[targetTab][editingTweetIndex] = obj;
+      }
+    }else{
+      data.tabTweets[targetTab].push(obj);
+    }
+    if(activeTab !== targetTab){ activeTab = targetTab; } // 跳到目标分栏
+    saveData(); syncFromDOM(); render(); closeMask("twMask");
+    showHint(editingTweetIndex >= 0 ? "已保存修改" : "已添加到「" + data.tabs[targetTab] + "」");
+  };
+  if(!files.length){ finish([]); return; }
+  const out = [];
+  let n = 0;
+  files.forEach(f=>{
+    const rd = new FileReader();
+    rd.onload = () => {
+      // 压缩到 webp
+      const img = new Image();
+      img.onload = () => {
+        try{
+          const c = document.createElement("canvas");
+          let w = img.width, h = img.height, maxw = 1000;
+          if(w > maxw){ h = Math.round(h*maxw/w); w = maxw; }
+          c.width = w; c.height = h;
+          c.getContext("2d").drawImage(img,0,0,w,h);
+          out.push(c.toDataURL("image/webp", 0.82));
+        }catch(e){ out.push(rd.result); }
+        if(++n === files.length) finish(out);
+      };
+      img.onerror = () => { out.push(rd.result); if(++n === files.length) finish(out); };
+      img.src = rd.result;
+    };
+    rd.readAsDataURL(f);
+  });
+}
+function deleteTweet(idx){
+  if(!confirm("确定删除这条推文？")) return;
+  data.tabTweets[activeTab].splice(idx, 1);
+  saveData(); render();
+  showHint("已删除");
+}
+
+// ---------- 分栏增删改 ----------
+let editingTabIndex = -1;
+function openTabModal(idx){
+  editingTabIndex = (typeof idx === "number") ? idx : -1;
+  const g = id => document.getElementById(id);
+  g("tabModalTitle").textContent = editingTabIndex >= 0 ? "重命名分栏" : "新建分栏";
+  g("tabNameInput").value = editingTabIndex >= 0 ? (data.tabs[editingTabIndex]||"") : "";
+  openMask("tabMask");
+  setTimeout(()=>g("tabNameInput").focus(), 50);
+}
+function confirmTab(){
+  const v = document.getElementById("tabNameInput").value.trim();
+  if(!v){ return; }
+  if(editingTabIndex >= 0){
+    data.tabs[editingTabIndex] = v;
+  }else{
+    data.tabs.push(v);
+    data.tabTweets.push([]);
+    activeTab = data.tabs.length - 1;
+  }
+  const isNew = editingTabIndex < 0;
+  saveData(); render(); closeMask("tabMask");
+  if(isNew){
+    requestAnimationFrame(()=>{
+      const els = document.querySelectorAll("#tabs .tab");
+      const el = els[activeTab];
+      if(el && el.scrollIntoView) el.scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"});
+    });
+    showHint("已新建分栏「" + data.tabs[activeTab] + "」，已自动选中");
+  }else{
+    showHint("已重命名");
+  }
+}
+
+// ---------- 分栏置顶跳转条 编辑（新增） ----------
+let editingPinIndex = -1;
+function openPinModal(idx){
+  editingPinIndex = (typeof idx === "number") ? idx : activeTab;
+  const g = id => document.getElementById(id);
+  const cur = (data.tabLinks && data.tabLinks[editingPinIndex]) || {};
+  g("pinModalTitle").textContent = "编辑置顶跳转 · " + (data.tabs[editingPinIndex] || "");
+  g("pinTextInput").value = cur.text || "";
+  g("pinUrlInput").value = cur.url || "";
+  openMask("pinMask");
+  setTimeout(()=>{ const t = g("pinTextInput"); if(t){ t.focus(); t.select(); } }, 50);
+}
+window.openPinModal = openPinModal;
+
+function confirmPin(){
+  const g = id => document.getElementById(id);
+  const text = g("pinTextInput").value.trim();
+  const url = g("pinUrlInput").value.trim();
+  if(!text && !url){ showHint("请至少填写文本或链接"); return; }
+  if(url && !/^https?:\/\//i.test(url) && !/^\//.test(url)){
+    showHint("链接需以 http:// 或 https:// 开头");
+    return;
+  }
+  if(!Array.isArray(data.tabLinks)) data.tabLinks = [];
+  data.tabLinks[editingPinIndex] = {text:text, url:url};
+  saveData();
+  render();
+  closeMask("pinMask");
+  // 提示：本机已生效；如需永久生效（发布给他人），需点击「📤 导出」
+  showHint("已保存本条；如需永久生效请点「📤 导出」");
+}
+window.confirmPin = confirmPin;
+
+function deleteTab(idx){
+  if(data.tabs.length <= 1){ showHint("至少保留一个分栏"); return; }
+  if(!confirm("确定删除分栏「" + data.tabs[idx] + "」及其全部推文？")) return;
+  data.tabs.splice(idx,1);
+  data.tabTweets.splice(idx,1);
+  if(activeTab >= data.tabs.length) activeTab = data.tabs.length - 1;
+  saveData(); render();
+  showHint("已删除分栏");
+}
+
+// ---------- 兜底：首次进入自动解锁（本机记过） ----------
+updateLockUI();
+
+// ---------- 自动播放音乐 ----------
+(function autoPlayMusic(){
+  if(!data.music) return;
+  // 1) 直接尝试自动播放（桌面浏览器常允许）
+  applyMusic();
+  const tryPlay = () => {
+    try{
+      const p = bgm.play();
+      if(p && p.then){ p.then(()=>{ musicPlaying = true; }).catch(()=>{}); }
+    }catch(e){}
+  };
+  tryPlay();
+  // 2) 用户第一次触碰屏幕任意位置立即播放（手机上必经的一步）
+  const kick = () => {
+    document.removeEventListener("touchstart", kick, true);
+    document.removeEventListener("click", kick, true);
+    if(bgm.paused){ applyMusic(); playMusic(); }
+  };
+  document.addEventListener("touchstart", kick, {once:false, capture:true, passive:true});
+  document.addEventListener("click", kick, {capture:true});
+})();
+
+render();
+updateLockUI();
+// 若此前已解锁（本机记住），打开即进入编辑态，避免「点＋没反应」
+if(localStorage.getItem(PW_KEY) === "1"){
+  editMode = true;
+  document.body.classList.add("editing");
+  render();
+}
+</script>
+
+
+
+
+<!--pnid:l4MK4X6RWC1L0ufhlPmwH3--><!-- 密码弹窗 -->
+<div data-page-node-id="QJtj78scxpKjyCOUVVdcSd" class="modal-mask" id="pwMask">
+  <div data-page-node-id="xeuW3Ypt6Bg2zZrl1R0wOO" class="modal">
+    <h3 data-page-node-id="7OL2DNIQnc45wRrZ00CztA"><!--pnid:RE7vgZaxyphMxNuFVbj3q4-->🔐 输入密码解锁编辑</h3>
+    <input data-page-node-id="jgbSFpJifGF0uhlNFZcNTy" autocomplete="off" id="pwInput" placeholder="密码错误，请重试" type="password">
+    <div data-page-node-id="IE2UTQMHDXVYgNBSRvU5cv" class="modal-btns">
+      <button data-page-node-id="iqBOilLLhDTTZhIb1gzhSD" class="mbtn ghost" onclick="closeMask('pwMask')"><!--pnid:1WaJKB2sHbG2waUPUXO3YL-->取消</button>
+      <button data-page-node-id="xydiVjF2xBEA89bPFwMbJ9" class="mbtn primary" onclick="tryUnlock()"><!--pnid:0zi803hyvbTF7o6F0PtI03-->解锁</button>
+    </div>
+  </div>
+</div>
+
+<!-- 分栏置顶跳转弹窗（新增） -->
+<div class="modal-mask" id="pinMask">
+  <div class="modal">
+    <h3 id="pinModalTitle">编辑置顶跳转 · 关于</h3>
+    <label>文本</label>
+    <input id="pinTextInput" placeholder="输入文本" type="text" autocomplete="off">
+    <label>链接</label>
+    <input id="pinUrlInput" placeholder="输入链接" type="text" autocomplete="off">
+    <div class="modal-btns">
+      <button class="mbtn ghost" onclick="closeMask('pinMask')">取消</button>
+      <button class="mbtn primary" onclick="confirmPin()">确认</button>
+    </div>
+  </div>
+</div>
+
+<!--pnid:8AVs8f2PzzLa10rG6jJmCq--><!-- 新建/编辑分栏弹窗 -->
+<div data-page-node-id="8uhxqwmIwbWPVRG6cGckwR" class="modal-mask" id="tabMask">
+  <div data-page-node-id="Y4u5rlIPF9ikaVXPnhkx0q" class="modal">
+    <h3 data-page-node-id="9o3BT0e6kd3HsdW8mUXxK8" id="tabModalTitle">新建分栏</h3>
+    <label data-page-node-id="0OagIy6YRp0N7vmukdnAvu"><!--pnid:Q1JXJw3BnIoyftwBE6J366-->分栏名称</label>
+    <input data-page-node-id="P3hwoNChqBIulic4FWOG3d" id="tabNameInput" placeholder="例如：杂谈" type="text">
+    <div data-page-node-id="gWG5Wo390aSfBGR9AUjsKM" class="modal-btns">
+      <button data-page-node-id="tSW3OKUBOzoD5930g9V8eZ" class="mbtn ghost" onclick="closeMask('tabMask')"><!--pnid:DgJvfDjZfYeKsLWSrKU2Kp-->取消</button>
+      <button data-page-node-id="tc3ch8Qf7JycdzcuZDKlnp" class="mbtn primary" onclick="confirmTab()"><!--pnid:8EG7rWlqsmSbMH1sqNDbwL-->确定</button>
+    </div>
+  </div>
+</div>
+
+<!--pnid:3MPE4IDiqWX2GHsH9GSRIz--><!-- 添加/编辑推文弹窗 -->
+<div data-page-node-id="HDflKeKvZxdZcpPA9MVS7h" class="modal-mask" id="twMask">
+  <div data-page-node-id="p1L1zsOhPL2p2k4rHL68Ce" class="modal">
+    <h3 data-page-node-id="DWhGC6SBOFNSIa8nwGVqnV" id="twModalTitle">添加推文</h3>
+    <label data-page-node-id="iDvwWWj30aJ3NJhBKG9vWr"><!--pnid:YM1KTnEYGpAXbj7ksh6szb-->正文</label>
+    <textarea data-page-node-id="vByOaUEQHkbbJDCzVASwVY" id="twText" placeholder="输入推文内容…" style="font-size: 16px;"></textarea>
+    <div data-page-node-id="hPLY5i0SY3NDLAPKzDYgHK" class="fontsize-row">
+      <span data-page-node-id="Q0RxkVOoR9QVFtXSJChdcr" class="fs-label"><!--pnid:1todCZlnosdNDfkPWLRIUV-->字号</span>
+      <input data-page-node-id="Khqc85cimAwZ3901VqloSo" id="twFontSize" max="26" min="12" oninput="onFontSizeInput()" step="1" type="range" value="16">
+      <span data-page-node-id="N6KntIfgdGhELrWXdKAhN3" class="fs-val" id="fsVal">16px</span>
+    </div>
+    <label data-page-node-id="FI5Xvx3hkUao9ve62m6UNn"><!--pnid:xlGL10Kiw0FTlkTUNwaPFG-->所属分栏</label>
+    <select data-page-node-id="YLJSq28moWynRl41pQlaaN" id="twTab"><option value="0">关于</option><option value="1">评价</option><option value="2">话术</option><option value="3">头牌</option><option value="4">须知</option></select>
+    <label data-page-node-id="Saqlyr65fXvLFWHrb6G2Pm"><!--pnid:eIjkuGtR3nHL33E0HCmX5J-->图片（可多选，最多9张；不选则纯文字）</label>
+    <input data-page-node-id="pGBLN8uiv1xxCjfmB6RY0z" accept="image/*" id="twImgs" multiple="" type="file">
+    <div data-page-node-id="bvT7NK64uHpmVM8K028wYH" class="modal-row">
+      <div data-page-node-id="w5W8XZHuJ7PNETUd56xeQC"><label data-page-node-id="89xSabzkW4SSCkoeR8galN"><!--pnid:5EBXMh6NNm7ocZSYwGxbh3-->时间</label><input data-page-node-id="g4BbR3VvyWN0VYmhfb1N9a" id="twTime" placeholder="如 10月13日" type="text"></div>
+      <div data-page-node-id="xHry0F6RC6ampmismvvjIc"><label data-page-node-id="xEbSOwT1oK9ai9lH9Utdqw"><!--pnid:XJSjJO3OefZzpE1SSLahMx-->发布者</label><input data-page-node-id="zW01GXnHLbaCUnhs7UiQNM" id="twName" placeholder="显示名" type="text"></div>
+    </div>
+    <div data-page-node-id="UENplzeJndjBkKcwO8ix6n" class="modal-row">
+      <div data-page-node-id="qa4y24csUI7wIa9GJ4qtm4"><label data-page-node-id="X89ozBk6tqHT9jZdgBFzdd"><!--pnid:BP4Aj0GwPdRd4rDFpu2e0X-->查看数</label><input data-page-node-id="pcQ8LiPTgpzvQ2htaLbvXi" id="twViews" placeholder="0" type="text"></div>
+      <div data-page-node-id="n3fTLcsIn3AeFx90uJ96VX"><label data-page-node-id="fISOZfjgGeAfnmHn6DTNqJ"><!--pnid:hcaXjPWKLfcE1IcudjudqX-->回复</label><input data-page-node-id="MW1Fu5QQCnp6TPRuX5BKPV" id="twReplies" placeholder="0" type="text"></div>
+    </div>
+    <div data-page-node-id="3dhvcOVpzLUhVpPWyNaqBH" class="modal-row">
+      <div data-page-node-id="tiiSjEjkzljkb1EM23PaUR"><label data-page-node-id="rDtiofdcvto9CpoAr0AwjS"><!--pnid:jOHyWHi7BuU1abq28Va7OP-->转发</label><input data-page-node-id="1GqQl1OYUjWqNfYXupBeuW" id="twRetweets" placeholder="0" type="text"></div>
+      <div data-page-node-id="JO2HAnuFq6Bere5DWyvZHF"><label data-page-node-id="ZUrIIxSP5HkKvVkFWhXYiv"><!--pnid:OHxvPHh82JYS3xELfU0rgH-->点赞</label><input data-page-node-id="0NZxmguEnBNdqBXkWLClBR" id="twLikes" placeholder="0" type="text"></div>
+    </div>
+    <div data-page-node-id="PYkGvS6kfjt11z6AHnHmju" class="modal-row">
+      <div data-page-node-id="q393mX0gmkWVqnNiUUoURb"><label data-page-node-id="fqxsew829ggarR1XSkj6tj"><!--pnid:w3lQ6gOlFK9dazzXmcMDUh-->收藏</label><input data-page-node-id="Zp2uwBoX5MLbvSqnquKoQZ" id="twBookmarks" placeholder="0" type="text"></div>
+      <div data-page-node-id="vxIoetuXK1paJYdrMDYFk7"><label data-page-node-id="uN6NQOz4VAQ2pq0ZpSmwh7"><!--pnid:vkvG1ptJposDItRkMGiFAP-->分享</label><input data-page-node-id="dVzhvZbejGvFTs6isi7Kea" id="twShares" placeholder="0" type="text"></div>
+    </div>
+    <div data-page-node-id="RKBon6klbWOpwzKVX26f5o" class="modal-btns">
+      <button data-page-node-id="7MJpzutWnBHMpwxoUmsJiD" class="mbtn ghost" onclick="closeMask('twMask')"><!--pnid:Rn8gTToVBJ5IrrGUKrGtvP-->取消</button>
+      <button data-page-node-id="E9nMrAIA5YxzlEjvBVSXyn" class="mbtn primary" onclick="confirmTweet()"><!--pnid:18e9f5vvp7X2HblFPT2rf5-->保存</button>
+    </div>
+  </div>
+</div>
+
+<!--pnid:KhDiiY7HrkxqDfL5glSWLA--><!-- 底部编辑操作条 -->
+<div data-page-node-id="NBAJCgGbkKbhPySamYn08Q" class="edit-bar open">
+  <button data-page-node-id="JhicDx48hGwpmtvEXFgNWC" class="ebtn primary" onclick="openTweetModal()"><!--pnid:eSNQvJTvxK2LqX2mqXFVLr-->＋ 添加推文</button>
+  <button data-page-node-id="ILJ7HMdYZnWtdiEkF2Esxi" class="ebtn" onclick="document.getElementById('musicPicker').click()"><!--pnid:y3sNlVtKHNRxI494iIboey-->🎵 音乐</button>
+  <button data-page-node-id="RvZdImJUVhLrWtifaaGwtL" class="ebtn" onclick="exportPage()"><!--pnid:SBwZ7234sk8OXBJPyZIPAx-->📤 导出</button>
+  <button data-page-node-id="ds2XfWOFbZ5rL7LjzcW3Hi" class="ebtn" id="lockBackBtn" onclick="lockBack()"><!--pnid:hngBUYASacl1TB5iXJdpjL-->🔒 锁定</button>
+</div>
+<div data-page-node-id="QkxnHFwzXqoZ4N8rTl1bO8" data-smartpage-scrollbar="1" style="position:fixed; top:0px; right:2px; width:6px; height:310.604px; border-radius:3px; background:rgba(0, 0, 0, 0.3); opacity:1; transition:opacity 0.25s; z-index:2147483647; pointer-events:auto; cursor:default; will-change:transform, height; transform:translateY(55.9311px)"></div><div data-page-node-id="UVYNCIDy5j60rTCx6DXwJ0" data-smartpage-scrollbar="1" style="position:fixed; top:0px; right:2px; width:6px; height:127.108px; border-radius:3px; background:rgba(0, 0, 0, 0.3); opacity:1; transition:opacity 0.25s; z-index:2147483647; pointer-events:auto; cursor:default; will-change:transform, height; transform:translateY(114.45px)"></div><div data-smartpage-scrollbar="1" style="position: fixed; top: 0px; right: 2px; width: 6px; height: 289.938px; border-radius: 3px; background: rgba(0, 0, 0, 0.3); opacity: 1; transition: opacity 0.25s; z-index: 2147483647; pointer-events: auto; cursor: default; will-change: transform, height; transform: translateY(0px);"></div></body></html>
